@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ひとりビジネス勝ち筋診断 プロトタイプ</title>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f7f7f7, #ffffff);
+      color: #111;
+    }
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 60px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.08);
+      padding: 24px;
+    }
+    h1 { font-size: 34px; margin: 0 0 8px; }
+    h2 { font-size: 28px; margin: 0 0 12px; }
+    h3 { font-size: 22px; margin: 0 0 8px; }
+    p { line-height: 1.8; }
+    .muted { color: #666; }
+    .badge {
+      display: inline-block;
+      background: #111;
+      color: #fff;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+    .grid-2 {
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #ddd;
+      border-radius: 14px;
+      font-size: 16px;
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: #111;
+      color: #fff;
+    }
+    .btn-secondary {
+      background: #efefef;
+      color: #111;
+    }
+    .btn-full { width: 100%; }
+    .progress {
+      width: 100%;
+      height: 12px;
+      background: #eee;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 16px 0 6px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #111;
+      width: 0%;
+      transition: width 0.2s ease;
+    }
+    .question-box {
+      background: #fafafa;
+      border-radius: 22px;
+      padding: 24px;
+    }
+    .choice {
+      width: 100%;
+      text-align: left;
+      border: 1px solid #ddd;
+      background: #fff;
+      padding: 18px;
+      border-radius: 18px;
+      margin-bottom: 12px;
+    }
+    .choice.active {
+      background: #111;
+      color: #fff;
+      border-color: #111;
+    }
+    .result-card {
+      border: 1px solid #eee;
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 16px;
+      background: #fff;
+    }
+    .result-number {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .radar-item { margin-bottom: 12px; }
+    .radar-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .radar-bar {
+      width: 100%;
+      height: 10px;
+      background: #eee;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .radar-fill {
+      height: 100%;
+      background: #111;
+      border-radius: 999px;
+    }
+    .hidden { display: none; }
+    @media (max-width: 640px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 24px; }
+      .card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="badge">プロトタイプ版 / 1ファイル</div>
+      <h1>ひとりビジネス勝ち筋診断</h1>
+      <p class="muted">生年月日と32問から、あなたの勝ち筋を見つける診断です。</p>
+
+      <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
+      <div id="progressText" class="muted">進行状況 0%</div>
+
+      <div id="screen-top">
+        <div class="grid grid-2" style="margin-top: 24px;">
+          <div>
+            <label for="name">お名前（任意）</label>
+            <input id="name" type="text" placeholder="例）清水章充" />
+          </div>
+          <div>
+            <label for="birthdate">生年月日（必須）</label>
+            <input id="birthdate" type="date" />
+          </div>
+        </div>
+        <div style="margin-top: 20px;">
+          <button id="startBtn" class="btn-primary btn-full">診断をはじめる</button>
+        </div>
+      </div>
+
+      <div id="screen-question" class="hidden" style="margin-top: 24px;"></div>
+      <div id="screen-result" class="hidden" style="margin-top: 24px;"></div>
+    </div>
+  </div>
+
+  <script>
+    const QUESTIONS = [
+      { id: 1, category: "winBelief", text: "アイデアを出すときは、まだ世の中にない価値を考えるのが好きだ", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 2, category: "workStyle", text: "ひとりで考える時間があると、仕事の質が上がりやすい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 3, category: "customer", text: "悩みが深い相手の方が、力を発揮しやすい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 4, category: "marketing", text: "売り込むより、共感を生む発信の方が向いている", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 5, category: "partnerWork", text: "一緒に働くなら、安心感のある人が合う", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 6, category: "partnerMarketing", text: "集客では、自分にない強みを持つ相手と組みたい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 7, category: "weakness", text: "頑張りすぎて、自分のペースを崩しやすい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 8, category: "winBelief", text: "感謝されると、やる気が大きく上がる", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 9, category: "workStyle", text: "計画より、まず動いてから整える方が得意だ", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 10, category: "customer", text: "理想のお客様像はかなり明確にある", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 11, category: "marketing", text: "人前で話すことは集客の武器になりうる", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 12, category: "partnerWork", text: "役割分担がはっきりしている方が働きやすい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 13, category: "partnerMarketing", text: "紹介や口コミの流れを作る相手と相性がいい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 14, category: "weakness", text: "やることが増えると、優先順位がぼやけやすい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 15, category: "winBelief", text: "競争よりも独自ポジションを取りたい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 16, category: "workStyle", text: "ルーティンより、変化のある働き方が合う", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 17, category: "customer", text: "広く浅くより、狭く深い市場に惹かれる", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 18, category: "marketing", text: "SNSは世界観が伝わる使い方が向いている", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 19, category: "partnerWork", text: "一緒に働く相手には、スピード感も求めたい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 20, category: "partnerMarketing", text: "集客パートナーには数字感覚も必要だ", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 21, category: "weakness", text: "人に合わせすぎて疲れることがある", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 22, category: "winBelief", text: "自分の体験談は価値になると思う", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 23, category: "workStyle", text: "朝の立ち上がりやスタートダッシュが得意だ", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 24, category: "customer", text: "相手の感情の変化に気づきやすい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 25, category: "marketing", text: "企画やイベント型の集客にワクワクする", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 26, category: "partnerWork", text: "細かい実務を支えてくれる人がいると強い", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 27, category: "partnerMarketing", text: "言語化のうまい人と組むと伸びやすい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 28, category: "weakness", text: "完璧にしようとして公開が遅れがちだ", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 29, category: "winBelief", text: "商品より先に、理念や想いを伝えたい", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 30, category: "workStyle", text: "自分の感覚を信じて意思決定することが多い", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 31, category: "customer", text: "悩みが深い人ほど、自分の価値を発揮できる", a: "かなりそう思う", b: "そこまでではない" },
+      { id: 32, category: "marketing", text: "売り込みより、共感を生む導線が向いている", a: "かなりそう思う", b: "そこまでではない" }
+    ];
+
+    const RESULT_MASTER = {
+      winBelief: {
+        high: { title: "導く太陽", summary: "あなたの仕事の勝ち観は、自分の信念や在り方で周囲に光を届けることです。理念や想いが強みとして伝わりやすい流れがあります。" },
+        low: { title: "成果設計", summary: "あなたの仕事の勝ち観は、成果につながる形に整理して価値を届けることです。実務と再現性を整えるほど強みが活きやすくなります。" }
+      },
+      workStyle: {
+        high: { title: "新価値を生み出して勝つ", summary: "変化や直感を活かしながら、まだ見えていない価値を形にしていく働き方に強みがあります。" },
+        low: { title: "構造を整えて勝つ", summary: "整理・設計・仕組み化で強みが出る働き方です。土台をつくるほど、継続的な成果につながりやすくなります。" }
+      },
+      customer: {
+        high: { title: "深い悩みを抱えた顧客", summary: "あなたと相性が良いのは、悩みが深く、本質的な支援を求めている顧客です。深い伴走の中で価値が伝わりやすいです。" },
+        low: { title: "課題が明確な顧客", summary: "あなたと相性が良いのは、課題が明確で、解決策を求めている顧客です。価値を整理して見せると選ばれやすくなります。" }
+      },
+      marketing: {
+        high: { title: "行動と接点数を増やして勝つ", summary: "あなたの集客の勝ち筋は、接点を増やし、会いに行き、動く中で信頼を積み上げることです。" },
+        low: { title: "言葉と導線を整えて勝つ", summary: "あなたの集客の勝ち筋は、発信・見せ方・導線設計を整えることです。安心感や分かりやすさが武器になります。" }
+      },
+      partnerWork: {
+        high: { title: "整えて支える仲間", summary: "働き方の勝ち筋パートナーは、あなたの発想や推進力を整理し、形にするのを支えてくれる存在です。" },
+        low: { title: "自走して進める仲間", summary: "働き方の勝ち筋パートナーは、自走力があり、判断が早く、流れを前に進めてくれる存在です。" }
+      },
+      partnerMarketing: {
+        high: { title: "共感を広げる仲間", summary: "集客の勝ち筋パートナーは、あなたにない集客機能を補い、言葉や紹介の流れを広げてくれる存在です。" },
+        low: { title: "導線を整える仲間", summary: "集客の勝ち筋パートナーは、ブランドの一貫性を保ちながら、見せ方や動線を整えてくれる存在です。" }
+      },
+      weakness: {
+        high: { title: "抱え込み停滞", summary: "あなたの負け筋は、頑張りすぎ、人に合わせすぎ、公開の遅れです。全部を抱えすぎると、本来の魅力が鈍りやすくなります。" },
+        low: { title: "慎重すぎる停滞", summary: "あなたの負け筋は、整えることを優先しすぎて動くタイミングを逃すことです。見せながら改善すると流れが良くなります。" }
+      }
+    };
+
+    const WORKSTYLE_RADAR_LABELS = ["直感", "構造化", "共感", "推進力", "独自性", "継続力"];
+    const MARKETING_RADAR_LABELS = ["行動量", "言語化", "世界観", "紹介力", "仕組み化", "提案力"];
+
+    let step = 0;
+    let answers = {};
+
+    const screenTop = document.getElementById("screen-top");
+    const screenQuestion = document.getElementById("screen-question");
+    const screenResult = document.getElementById("screen-result");
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
+    const nameInput = document.getElementById("name");
+    const birthdateInput = document.getElementById("birthdate");
+    const startBtn = document.getElementById("startBtn");
+
+    startBtn.addEventListener("click", () => {
+      if (!birthdateInput.value) {
+        alert("生年月日を入れてください。");
+        return;
+      }
+      step = 1;
+      render();
+    });
+
+    function getBirthSeed(birthdate) {
+      if (!birthdate) return 0;
+      return birthdate.replaceAll("-", "").split("").map(Number).reduce((a, b) => a + b, 0) % 5;
+    }
+
+    function analyzeAnswers() {
+      const scores = {
+        winBelief: 0,
+        workStyle: 0,
+        customer: 0,
+        marketing: 0,
+        partnerWork: 0,
+        partnerMarketing: 0,
+        weakness: 0,
+      };
+      const counts = { ...scores };
+
+      QUESTIONS.forEach(q => {
+        counts[q.category] += 1;
+        if (answers[q.id] === "A") scores[q.category] += 1;
+      });
+
+      const seed = getBirthSeed(birthdateInput.value);
+      if (seed === 1) { scores.workStyle += 1; scores.marketing += 1; }
+      if (seed === 2) { scores.customer += 1; scores.partnerWork += 1; }
+      if (seed === 3) { scores.winBelief += 1; scores.partnerMarketing += 1; }
+      if (seed === 4) { scores.weakness += 1; }
+
+      const getMode = (key) => scores[key] >= Math.ceil(counts[key] / 2) ? "high" : "low";
+
+      const workRadar = WORKSTYLE_RADAR_LABELS.map((label, i) => ({
+        label,
+        value: Math.max(2, Math.min(5, ((scores.workStyle + scores.customer + seed + i) % 4) + 2))
+      }));
+      const marketingRadar = MARKETING_RADAR_LABELS.map((label, i) => ({
+        label,
+        value: Math.max(2, Math.min(5, ((scores.marketing + scores.partnerMarketing + scores.weakness + i) % 4) + 2))
+      }));
+
+      return [
+        { label: "仕事の勝ち観", ...RESULT_MASTER.winBelief[getMode("winBelief")] },
+        { label: "働き方の勝ち筋", ...RESULT_MASTER.workStyle[getMode("workStyle")] },
+        { label: "働き方レーダー", radar: workRadar },
+        { label: "勝ち筋顧客", ...RESULT_MASTER.customer[getMode("customer")] },
+        { label: "集客の勝ち筋", ...RESULT_MASTER.marketing[getMode("marketing")] },
+        { label: "集客レーダー", radar: marketingRadar },
+        { label: "勝ち筋パートナー【働き方】", ...RESULT_MASTER.partnerWork[getMode("partnerWork")] },
+        { label: "勝ち筋パートナー【集客】", ...RESULT_MASTER.partnerMarketing[getMode("partnerMarketing")] },
+        { label: "負け筋", ...RESULT_MASTER.weakness[getMode("weakness")] },
+      ];
+    }
+
+    function updateProgress() {
+      let value = 0;
+      if (step === 0) value = 3;
+      else if (step >= 1 && step <= QUESTIONS.length) value = Math.round((step / (QUESTIONS.length + 1)) * 100);
+      else value = 100;
+      progressBar.style.width = value + "%";
+      progressText.textContent = `進行状況 ${value}%`;
+    }
+
+    function renderQuestion() {
+      const q = QUESTIONS[step - 1];
+      screenQuestion.innerHTML = `
+        <div class="muted" style="margin-bottom: 10px;">質問 ${q.id} / 32</div>
+        <div class="question-box">
+          <div class="muted" style="margin-bottom: 8px;">Q${q.id}</div>
+          <h2>${q.text}</h2>
+          <div style="margin-top: 20px;">
+            <button class="choice ${answers[q.id] === "A" ? "active" : ""}" onclick="selectAnswer(${q.id}, 'A')">
+              <div style="font-size:13px; opacity:0.8; margin-bottom:4px;">A</div>
+              <div>${q.a}</div>
+            </button>
+            <button class="choice ${answers[q.id] === "B" ? "active" : ""}" onclick="selectAnswer(${q.id}, 'B')">
+              <div style="font-size:13px; opacity:0.8; margin-bottom:4px;">B</div>
+              <div>${q.b}</div>
+            </button>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top: 16px;">
+          <button class="btn-secondary" onclick="goBack()">戻る</button>
+          <button class="btn-primary" onclick="goNext()">${step === QUESTIONS.length ? "結果を見る" : "次へ"}</button>
+        </div>
+      `;
+    }
+
+    function renderRadar(items) {
+      return items.map(item => `
+        <div class="radar-item">
+          <div class="radar-head"><span>${item.label}</span><span>${item.value} / 5</span></div>
+          <div class="radar-bar"><div class="radar-fill" style="width:${item.value * 20}%"></div></div>
+        </div>
+      `).join("");
+    }
+
+    function renderResult() {
+      const results = analyzeAnswers();
+      screenResult.innerHTML = `
+        <div style="margin-bottom: 18px;">
+          <div class="muted">診断完了</div>
+          <h2>${nameInput.value || "ゲスト"}さんの診断結果</h2>
+          <p class="muted">生年月日と32問の回答をもとに、現時点のプロトタイプ結果を表示しています。</p>
+        </div>
+        <div style="margin-bottom: 16px;" class="btn-row">
+          <button class="btn-secondary" onclick="restartDiagnosis()">もう一度診断する</button>
+          <button class="btn-primary" onclick="downloadPdf()">PDFを出力</button>
+        </div>
+        ${results.map((item, i) => {
+          if (item.radar) {
+            return `
+              <div class="result-card">
+                <div class="result-number">${i + 1}. ${item.label}</div>
+                <h3>${item.label}</h3>
+                <p class="muted">現時点の仮レーダー表示です。正式版ではロジックに応じて数値を確定します。</p>
+                ${renderRadar(item.radar)}
+              </div>
+            `;
+          }
+          return `
+            <div class="result-card">
+              <div class="result-number">${i + 1}. ${item.label}</div>
+              <h3>${item.title}</h3>
+              <p>${item.summary}</p>
+            </div>
+          `;
+        }).join("")}
+      `;
+    }
+
+    function render() {
+      updateProgress();
+      screenTop.classList.add("hidden");
+      screenQuestion.classList.add("hidden");
+      screenResult.classList.add("hidden");
+
+      if (step === 0) screenTop.classList.remove("hidden");
+      else if (step >= 1 && step <= QUESTIONS.length) {
+        screenQuestion.classList.remove("hidden");
+        renderQuestion();
+      } else {
+        screenResult.classList.remove("hidden");
+        renderResult();
+      }
+    }
+
+    function selectAnswer(id, value) {
+      answers[id] = value;
+      renderQuestion();
+    }
+
+    function goBack() {
+      if (step > 1) step -= 1;
+      else step = 0;
+      render();
+    }
+
+    function goNext() {
+      const q = QUESTIONS[step - 1];
+      if (!answers[q.id]) {
+        alert("AかBを選んでください。");
+        return;
+      }
+      step += 1;
+      render();
+    }
+
+    function restartDiagnosis() {
+      step = 0;
+      answers = {};
+      render();
+    }
+
+    function downloadPdf() {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
+      const results = analyzeAnswers();
+      let y = 18;
+      const pageWidth = pdf.internal.pageSize.getWidth();
+
+      pdf.setFontSize(18);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Hitori Business Winning Pattern Diagnosis", 14, y);
+      y += 10;
+      pdf.setFontSize(11);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`Name: ${nameInput.value || "Guest"}`, 14, y);
+      y += 6;
+      pdf.text(`Birthdate: ${birthdateInput.value || "Not entered"}`, 14, y);
+      y += 10;
+
+      results.forEach((item, index) => {
+        if (y > 245) {
+          pdf.addPage();
+          y = 18;
+        }
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(12);
+        pdf.text(`${index + 1}. ${item.label}`, 14, y);
+        y += 6;
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(10);
+
+        if (item.radar) {
+          item.radar.forEach(r => {
+            pdf.text(`${r.label}: ${r.value} / 5`, 16, y);
+            y += 5;
+          });
+          y += 3;
+        } else {
+          pdf.setFont("helvetica", "bold");
+          pdf.text(item.title, 16, y);
+          y += 5;
+          pdf.setFont("helvetica", "normal");
+          const lines = pdf.splitTextToSize(item.summary, pageWidth - 30);
+          pdf.text(lines, 16, y);
+          y += lines.length * 5 + 4;
+        }
+      });
+
+      pdf.save(`kachisuji-shindan-${nameInput.value || "guest"}.pdf`);
+    }
+
+    render();
+  </script>
+</body>
+</html>
