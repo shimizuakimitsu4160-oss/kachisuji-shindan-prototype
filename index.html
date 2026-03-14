@@ -425,6 +425,18 @@ function analyzeAnswers() {
       answers = {};
       render();
     }
+    function render() {
+  if (step === 0) {
+    return;
+  }
+
+  if (step >= 1 && step <= QUESTIONS.length) {
+    renderQuestion();
+    return;
+  }
+
+  renderResult();
+}
 
     function escapeHtml(str) {
       return String(str)
