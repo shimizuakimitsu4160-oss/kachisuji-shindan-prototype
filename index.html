@@ -437,6 +437,43 @@ function analyzeAnswers() {
 
   renderResult();
 }
+    function renderQuestion() {
+  const q = QUESTIONS[step - 1];
+  if (!q) return;
+
+  const selected = answers[q.id];
+
+  document.getElementById("screen-question").innerHTML = `
+    <div class="card">
+      <div class="progress-text">進行状況 ${Math.round((step / QUESTIONS.length) * 100)}%</div>
+      <div class="progress"><div class="progress-bar" style="width:${(step / QUESTIONS.length) * 100}%"></div></div>
+      <div class="question-count">質問 ${step} / ${QUESTIONS.length}</div>
+
+      <div class="question-card">
+        <div class="question-number">Q${q.id}</div>
+        <h2>${q.text}</h2>
+
+        <button class="answer-btn ${selected === "A" ? "selected" : ""}" onclick="selectAnswer(${q.id}, 'A')">
+          <div class="answer-label">A</div>
+          <div>${q.a}</div>
+        </button>
+
+        <button class="answer-btn ${selected === "B" ? "selected" : ""}" onclick="selectAnswer(${q.id}, 'B')">
+          <div class="answer-label">B</div>
+          <div>${q.b}</div>
+        </button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goBack()">戻る</button>
+        <button class="btn-primary" onclick="goNext()">次へ</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("screen-question").classList.remove("hidden");
+  document.getElementById("screen-result").classList.add("hidden");
+}
 
     function escapeHtml(str) {
       return String(str)
