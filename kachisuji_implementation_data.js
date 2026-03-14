@@ -1,5 +1,5 @@
 // Auto-generated implementation data for ひとりビジネス勝ち筋診断
-export const implementationData = {
+window.kachisujiData = {
   "meta": {
     "project": "ひとりビジネス勝ち筋診断",
     "version": "implementation-data-v1",
