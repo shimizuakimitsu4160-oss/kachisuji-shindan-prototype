@@ -601,7 +601,9 @@
         printWindow.print();
       }, 500);
     }
-
+if (window.kachisujiData && window.kachisujiData.questions) {
+  QUESTIONS = window.kachisujiData.questions;
+}
     render();
   </script>
 </body>
