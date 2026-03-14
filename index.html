@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ひとりビジネス勝ち筋診断 プロトタイプ</title>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <style>
+    <style>
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -447,54 +446,159 @@
       render();
     }
 
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
     function downloadPdf() {
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
       const results = analyzeAnswers();
-      let y = 18;
-      const pageWidth = pdf.internal.pageSize.getWidth();
+      const printWindow = window.open("", "_blank");
+      const personName = nameInput.value || "ゲスト";
+      const birthdate = birthdateInput.value || "未入力";
 
-      pdf.setFontSize(18);
-      pdf.setFont("helvetica", "bold");
-      pdf.text("Hitori Business Winning Pattern Diagnosis", 14, y);
-      y += 10;
-      pdf.setFontSize(11);
-      pdf.setFont("helvetica", "normal");
-      pdf.text(`Name: ${nameInput.value || "Guest"}`, 14, y);
-      y += 6;
-      pdf.text(`Birthdate: ${birthdateInput.value || "Not entered"}`, 14, y);
-      y += 10;
-
-      results.forEach((item, index) => {
-        if (y > 245) {
-          pdf.addPage();
-          y = 18;
-        }
-        pdf.setFont("helvetica", "bold");
-        pdf.setFontSize(12);
-        pdf.text(`${index + 1}. ${item.label}`, 14, y);
-        y += 6;
-        pdf.setFont("helvetica", "normal");
-        pdf.setFontSize(10);
-
+      const resultHtml = results.map((item, index) => {
         if (item.radar) {
-          item.radar.forEach(r => {
-            pdf.text(`${r.label}: ${r.value} / 5`, 16, y);
-            y += 5;
-          });
-          y += 3;
-        } else {
-          pdf.setFont("helvetica", "bold");
-          pdf.text(item.title, 16, y);
-          y += 5;
-          pdf.setFont("helvetica", "normal");
-          const lines = pdf.splitTextToSize(item.summary, pageWidth - 30);
-          pdf.text(lines, 16, y);
-          y += lines.length * 5 + 4;
+          return `
+            <section class="result-card">
+              <div class="result-number">${index + 1}. ${escapeHtml(item.label)}</div>
+              <h3>${escapeHtml(item.label)}</h3>
+              <p class="muted">現時点の仮レーダー表示です。正式版では、設問32と診断ロジックに応じて数値を確定します。</p>
+              ${item.radar.map(r => `
+                <div class="radar-item">
+                  <div class="radar-head"><span>${escapeHtml(r.label)}</span><span>${r.value} / 5</span></div>
+                  <div class="radar-bar"><div class="radar-fill" style="width:${r.value * 20}%"></div></div>
+                </div>
+              `).join("")}
+            </section>
+          `;
         }
-      });
 
-      pdf.save(`kachisuji-shindan-${nameInput.value || "guest"}.pdf`);
+        return `
+          <section class="result-card">
+            <div class="result-number">${index + 1}. ${escapeHtml(item.label)}</div>
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.summary)}</p>
+          </section>
+        `;
+      }).join("");
+
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="ja">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>勝ち筋診断PDF</title>
+          <style>
+            body {
+              font-family: "Yu Gothic", "Hiragino Sans", "Meiryo", sans-serif;
+              margin: 0;
+              color: #111;
+              background: #fff;
+            }
+            .page {
+              max-width: 900px;
+              margin: 0 auto;
+              padding: 32px 28px 60px;
+            }
+            h1 {
+              font-size: 30px;
+              margin: 0 0 8px;
+            }
+            h2 {
+              font-size: 20px;
+              margin: 0 0 10px;
+            }
+            h3 {
+              font-size: 28px;
+              margin: 0 0 10px;
+            }
+            p {
+              line-height: 1.9;
+              margin: 0;
+            }
+            .lead {
+              margin-bottom: 24px;
+            }
+            .meta {
+              margin-bottom: 28px;
+              line-height: 1.9;
+            }
+            .result-card {
+              border: 1px solid #ddd;
+              border-radius: 18px;
+              padding: 18px;
+              margin-bottom: 16px;
+              page-break-inside: avoid;
+            }
+            .result-number {
+              color: #666;
+              font-size: 14px;
+              margin-bottom: 8px;
+            }
+            .muted {
+              color: #666;
+            }
+            .radar-item {
+              margin-top: 10px;
+            }
+            .radar-head {
+              display: flex;
+              justify-content: space-between;
+              font-size: 14px;
+              margin-bottom: 6px;
+            }
+            .radar-bar {
+              width: 100%;
+              height: 10px;
+              background: #eee;
+              border-radius: 999px;
+              overflow: hidden;
+            }
+            .radar-fill {
+              height: 100%;
+              background: #111;
+            }
+            .note {
+              margin-top: 16px;
+              font-size: 12px;
+              color: #666;
+            }
+            @media print {
+              body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+              }
+              .page {
+                padding: 16mm 14mm 18mm;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="page">
+            <h1>ひとりビジネス勝ち筋診断</h1>
+            <p class="lead">生年月日と32問の回答をもとに、現時点のプロトタイプ結果をまとめています。</p>
+            <div class="meta">
+              <div><strong>お名前：</strong> ${escapeHtml(personName)}</div>
+              <div><strong>生年月日：</strong> ${escapeHtml(birthdate)}</div>
+            </div>
+            ${resultHtml}
+            <div class="note">※ このPDFはプロトタイプ版です。正式版では、設問・ロジック・レーダー数値・結果文を差し替えます。</div>
+          </div>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+      }, 500);
     }
 
     render();
