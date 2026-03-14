@@ -280,145 +280,124 @@
       return birthdate.replaceAll("-", "").split("").map(Number).reduce((a, b) => a + b, 0) % 5;
     }
 
-    function analyzeAnswers() {
-      const scores = {
-        winBelief: 0,
-        workStyle: 0,
-        customer: 0,
-        marketing: 0,
-        partnerWork: 0,
-        partnerMarketing: 0,
-        weakness: 0,
-      };
-      const counts = { ...scores };
+function analyzeAnswers() {
+  const birthdaySeed = getBirthSeed(birthdate);
 
-      QUESTIONS.forEach(q => {
-        counts[q.category] += 1;
-        if (answers[q.id] === "A") scores[q.category] += 1;
-      });
+  const workStyleScores = {
+    deep: 0,
+    detail: 0,
+    team: 0,
+    expert: 0,
+    result: 0,
+    newValue: 0,
+    shortcut: 0,
+    dialogue: 0,
+    trend: 0
+  };
 
-      const seed = getBirthSeed(birthdateInput.value);
-      if (seed === 1) { scores.workStyle += 1; scores.marketing += 1; }
-      if (seed === 2) { scores.customer += 1; scores.partnerWork += 1; }
-      if (seed === 3) { scores.winBelief += 1; scores.partnerMarketing += 1; }
-      if (seed === 4) { scores.weakness += 1; }
+  const marketingScores = {
+    collab: 0,
+    broadcast: 0,
+    words: 0,
+    referral: 0,
+    funnel: 0,
+    action: 0,
+    soft: 0,
+    place: 0
+  };
 
-      const getMode = (key) => scores[key] >= Math.ceil(counts[key] / 2) ? "high" : "low";
+  for (let q = 1; q <= 12; q++) {
+    const answer = answers[q];
+    const map = window.kachisujiData.workStyleScoring[q];
+    if (answer && map && map[answer]) {
+      workStyleScores[map[answer]] += 1;
+    }
+  }
 
-      const workRadar = WORKSTYLE_RADAR_LABELS.map((label, i) => ({
-        label,
-        value: Math.max(2, Math.min(5, ((scores.workStyle + scores.customer + seed + i) % 4) + 2))
-      }));
-      const marketingRadar = MARKETING_RADAR_LABELS.map((label, i) => ({
-        label,
-        value: Math.max(2, Math.min(5, ((scores.marketing + scores.partnerMarketing + scores.weakness + i) % 4) + 2))
-      }));
+  for (let q = 13; q <= 20; q++) {
+    const answer = answers[q];
+    const map = window.kachisujiData.marketingScoring[q];
+    if (answer && map && map[answer]) {
+      marketingScores[map[answer]] += 1;
+    }
+  }
 
-      return [
-        { label: "仕事の勝ち観", ...RESULT_MASTER.winBelief[getMode("winBelief")] },
-        { label: "働き方の勝ち筋", ...RESULT_MASTER.workStyle[getMode("workStyle")] },
-        { label: "働き方レーダー", radar: workRadar },
-        { label: "勝ち筋顧客", ...RESULT_MASTER.customer[getMode("customer")] },
-        { label: "集客の勝ち筋", ...RESULT_MASTER.marketing[getMode("marketing")] },
-        { label: "集客レーダー", radar: marketingRadar },
-        { label: "勝ち筋パートナー【働き方】", ...RESULT_MASTER.partnerWork[getMode("partnerWork")] },
-        { label: "勝ち筋パートナー【集客】", ...RESULT_MASTER.partnerMarketing[getMode("partnerMarketing")] },
-        { label: "負け筋", ...RESULT_MASTER.weakness[getMode("weakness")] },
-      ];
+  if (window.kachisujiData.applyMarketingBonuses) {
+    window.kachisujiData.applyMarketingBonuses(answers, marketingScores);
+  }
+
+  function pickWinner(scores, tieBreakQuestions, scoringMap) {
+    const max = Math.max(...Object.values(scores));
+    let candidates = Object.keys(scores).filter(k => scores[k] === max);
+
+    if (candidates.length === 1) return candidates[0];
+
+    for (const q of tieBreakQuestions) {
+      const answer = answers[q];
+      const key = scoringMap[q] && scoringMap[q][answer];
+      if (key && candidates.includes(key)) return key;
     }
 
-    function updateProgress() {
-      let value = 0;
-      if (step === 0) value = 3;
-      else if (step >= 1 && step <= QUESTIONS.length) value = Math.round((step / (QUESTIONS.length + 1)) * 100);
-      else value = 100;
-      progressBar.style.width = value + "%";
-      progressText.textContent = `進行状況 ${value}%`;
-    }
+    return candidates[0];
+  }
 
-    function renderQuestion() {
-      const q = QUESTIONS[step - 1];
-      screenQuestion.innerHTML = `
-        <div class="muted" style="margin-bottom: 10px;">質問 ${q.id} / 32</div>
-        <div class="question-box">
-          <div class="muted" style="margin-bottom: 8px;">Q${q.id}</div>
-          <h2>${q.text}</h2>
-          <div style="margin-top: 20px;">
-            <button class="choice ${answers[q.id] === "A" ? "active" : ""}" onclick="selectAnswer(${q.id}, 'A')">
-              <div style="font-size:13px; opacity:0.8; margin-bottom:4px;">A</div>
-              <div>${q.a}</div>
-            </button>
-            <button class="choice ${answers[q.id] === "B" ? "active" : ""}" onclick="selectAnswer(${q.id}, 'B')">
-              <div style="font-size:13px; opacity:0.8; margin-bottom:4px;">B</div>
-              <div>${q.b}</div>
-            </button>
-          </div>
-        </div>
-        <div class="btn-row" style="margin-top: 16px;">
-          <button class="btn-secondary" onclick="goBack()">戻る</button>
-          <button class="btn-primary" onclick="goNext()">${step === QUESTIONS.length ? "結果を見る" : "次へ"}</button>
-        </div>
-      `;
-    }
+  const workStyleKey = pickWinner(
+    workStyleScores,
+    window.kachisujiData.workTieBreakQuestions,
+    window.kachisujiData.workStyleScoring
+  );
 
-    function renderRadar(items) {
-      return items.map(item => `
-        <div class="radar-item">
-          <div class="radar-head"><span>${item.label}</span><span>${item.value} / 5</span></div>
-          <div class="radar-bar"><div class="radar-fill" style="width:${item.value * 20}%"></div></div>
-        </div>
-      `).join("");
-    }
+  const marketingKey = pickWinner(
+    marketingScores,
+    window.kachisujiData.marketingTieBreakQuestions,
+    window.kachisujiData.marketingScoring
+  );
 
-    function renderResult() {
-      const results = analyzeAnswers();
-      screenResult.innerHTML = `
-        <div style="margin-bottom: 18px;">
-          <div class="muted">診断完了</div>
-          <h2>${nameInput.value || "ゲスト"}さんの診断結果</h2>
-          <p class="muted">生年月日と32問の回答をもとに、現時点のプロトタイプ結果を表示しています。</p>
-        </div>
-        <div style="margin-bottom: 16px;" class="btn-row">
-          <button class="btn-secondary" onclick="restartDiagnosis()">もう一度診断する</button>
-          <button class="btn-primary" onclick="downloadPdf()">PDFを出力</button>
-        </div>
-        ${results.map((item, i) => {
-          if (item.radar) {
-            return `
-              <div class="result-card">
-                <div class="result-number">${i + 1}. ${item.label}</div>
-                <h3>${item.label}</h3>
-                <p class="muted">現時点の仮レーダー表示です。正式版ではロジックに応じて数値を確定します。</p>
-                ${renderRadar(item.radar)}
-              </div>
-            `;
-          }
-          return `
-            <div class="result-card">
-              <div class="result-number">${i + 1}. ${item.label}</div>
-              <h3>${item.title}</h3>
-              <p>${item.summary}</p>
-            </div>
-          `;
-        }).join("")}
-      `;
-    }
+  const customerModifier =
+    answers[21] === "A" ? "共鳴・温度感重視" : "知識・専門性重視";
 
-    function render() {
-      updateProgress();
-      screenTop.classList.add("hidden");
-      screenQuestion.classList.add("hidden");
-      screenResult.classList.add("hidden");
+  let aCount = 0;
+  let bCount = 0;
+  for (let q = 22; q <= 32; q++) {
+    if (answers[q] === "A") aCount += 1;
+    if (answers[q] === "B") bCount += 1;
+  }
 
-      if (step === 0) screenTop.classList.remove("hidden");
-      else if (step >= 1 && step <= QUESTIONS.length) {
-        screenQuestion.classList.remove("hidden");
-        renderQuestion();
-      } else {
-        screenResult.classList.remove("hidden");
-        renderResult();
-      }
-    }
+  let losingRiskLabel = "感情・勢い先行リスク";
+  if (bCount > aCount) losingRiskLabel = "考えすぎ・停止リスク";
+  if (aCount === bCount) {
+    let aTie = 0;
+    let bTie = 0;
+    [23, 30, 32].forEach(q => {
+      if (answers[q] === "A") aTie += 1;
+      if (answers[q] === "B") bTie += 1;
+    });
+    losingRiskLabel = aTie >= bTie ? "感情・勢い先行リスク" : "考えすぎ・停止リスク";
+  }
+
+  const winBeliefType = [
+    "導く太陽",
+    "深海探求",
+    "旋風ムーブメント",
+    "共鳴の灯火",
+    "静かな革命"
+  ][birthdaySeed] || "導く太陽";
+
+  return {
+    birthdaySeed,
+    winBeliefType,
+    workStyleKey,
+    workStyleScores,
+    marketingKey,
+    marketingScores,
+    customerKey: workStyleKey,
+    customerModifier,
+    partnerWorkKey: workStyleKey,
+    partnerMarketingKey: marketingKey,
+    losingTypeKey: winBeliefType,
+    losingRiskLabel
+  };
+}
 
     function selectAnswer(id, value) {
       answers[id] = value;
