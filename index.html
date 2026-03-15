@@ -4,21 +4,26 @@
   <meta charset="UTF-8" />
   <title>ひとりビジネス勝ち筋診断</title>
   <style>
-    body { background: #f8f9fa; font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; }
-    .card { background: #fff; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); padding: 40px; width: 100%; max-width: 500px; }
-    .input-row { display: flex; gap: 5px; align-items: center; margin-top: 10px; }
-    input { padding: 10px; border: 1px solid #ddd; border-radius: 8px; flex: 1; }
-    .btn { width: 100%; padding: 15px; background: #000; color: #fff; border: none; border-radius: 10px; margin-top: 20px; cursor: pointer; }
+    body { background: #f8f9fa; font-family: "Helvetica Neue", Arial, sans-serif; display: flex; justify-content: center; padding: 50px 20px; }
+    .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 40px; width: 100%; max-width: 500px; }
+    h1 { text-align: center; font-size: 24px; margin-bottom: 30px; font-weight: 800; }
+    label { font-weight: bold; font-size: 14px; color: #555; }
+    input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 12px; margin: 8px 0 20px 0; box-sizing: border-box; }
+    .birth-row { display: flex; gap: 10px; }
+    .birth-row input { flex: 1; text-align: center; }
+    .btn { width: 100%; padding: 16px; background: #111; color: #fff; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+    .btn:hover { background: #333; }
     .hidden { display: none; }
-    h2 { font-size: 18px; margin-bottom: 20px; }
+    h2 { font-size: 20px; text-align: center; margin-bottom: 30px; }
   </style>
 </head>
 <body>
   <div class="card" id="screen-top">
-    <h1>勝ち筋診断</h1>
-    <label>お名前</label><input type="text" id="name" style="width: 90%; margin-bottom: 20px;">
+    <h1>ひとりビジネス<br>勝ち筋診断</h1>
+    <label>お名前</label>
+    <input type="text" id="name" placeholder="お名前を入力">
     <label>生年月日</label>
-    <div class="input-row">
+    <div class="birth-row">
       <input type="number" id="by" placeholder="1977">年
       <input type="number" id="bm" placeholder="03">月
       <input type="number" id="bd" placeholder="13">日
@@ -34,6 +39,7 @@
     const QUESTIONS = ["アイデアを出すときは、まだ世の中にない価値を考えるのが好きだ", "ひとりで考える時間があると、仕事の質が上がりやすい"]; 
     let cur = 0;
     function start() {
+      if(!document.getElementById('name').value) return alert("お名前を入力してください");
       document.getElementById('screen-top').classList.add('hidden');
       document.getElementById('screen-q').classList.remove('hidden');
       render();
@@ -42,7 +48,7 @@
       document.getElementById('q-content').innerHTML = `
         <h2>${cur + 1}. ${QUESTIONS[cur]}</h2>
         <button class="btn" onclick="next()">かなりそう思う</button>
-        <button class="btn" style="background:#666" onclick="next()">そこまでではない</button>
+        <button class="btn" style="background:#f0f0f0; color:#333; margin-top:10px;" onclick="next()">そこまでではない</button>
       `;
     }
     function next() {
