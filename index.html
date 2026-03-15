@@ -426,6 +426,11 @@ function analyzeAnswers() {
         return;
       }
       step += 1;
+      if(step > QUESTIONS.length){
+  const result = calculateResult();
+  renderResult(result);
+  return;
+}
       render();
     }
 
