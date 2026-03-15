@@ -3,58 +3,103 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ひとりビジネス勝ち筋診断 プロトタイプ</title>
+  <title>ひとりビジネス勝ち筋診断</title>
   <style>
+    :root {
+      --primary-color: #111111;
+      --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+      --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --accent-soft: #f0f0f0;
+    }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, sans-serif; background: #f8f9fa; color: #111; }
-    .wrap { max-width: 800px; margin: 0 auto; padding: 24px 16px; }
-    .card { background: #fff; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.05); padding: 32px; margin-bottom: 24px; }
-    h1 { font-size: 28px; margin-bottom: 8px; text-align: center; }
-    .birth-input-group { display: flex; gap: 10px; align-items: center; justify-content: center; margin-top: 20px; }
-    .birth-input-group input { width: 80px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; text-align: center; font-size: 16px; }
-    .birth-input-group input.year { width: 100px; }
-    .q-container { margin-bottom: 40px; border-bottom: 1px dashed #eee; padding-bottom: 20px; }
-    .q-text { font-size: 18px; font-weight: bold; margin-bottom: 16px; display: block; }
-    .options { display: flex; gap: 12px; }
-    .opt-btn { flex: 1; padding: 16px; border: 1px solid #ddd; border-radius: 12px; background: #fff; cursor: pointer; transition: 0.2s; font-weight: bold; }
-    .opt-btn.active { background: #111; color: #fff; border-color: #111; }
-    .progress-info { text-align: center; color: #666; margin-bottom: 10px; font-size: 14px; }
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--primary-color);
+      line-height: 1.6;
+    }
+    .wrap { max-width: 700px; margin: 0 auto; padding: 40px 20px; }
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: var(--card-shadow);
+      padding: 40px;
+      margin-bottom: 30px;
+      transition: transform 0.3s ease;
+    }
+    h1 { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 30px; letter-spacing: 0.05em; }
+    
+    /* 生年月日入力エリア */
+    .input-box { text-align: center; margin-bottom: 30px; }
+    .birth-inputs { display: flex; gap: 12px; justify-content: center; align-items: center; margin-top: 15px; }
+    .birth-inputs input {
+      width: 80px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 12px;
+      font-size: 18px; text-align: center; outline: none; transition: 0.2s;
+    }
+    .birth-inputs input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+    .birth-inputs input.year { width: 110px; }
+
+    /* 設問エリア */
+    .q-item { margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid #f0f0f0; }
+    .q-text { display: block; font-size: 18px; font-weight: 700; margin-bottom: 20px; line-height: 1.5; }
+    .options { display: flex; gap: 15px; }
+    .opt-btn {
+      flex: 1; padding: 18px; border: 1.5px solid #e0e0e0; border-radius: 16px;
+      background: #fff; cursor: pointer; font-weight: 700; font-size: 15px; transition: 0.3s;
+    }
+    .opt-btn.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+
+    /* プログレスバー */
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-bar { height: 6px; background: #eee; border-radius: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--primary-color); width: 0%; transition: width 0.5s ease; }
+    .progress-text { font-size: 13px; color: #888; text-align: right; margin-top: 8px; font-weight: bold; }
+
+    .btn-main {
+      width: 100%; padding: 20px; background: var(--primary-color); color: #fff;
+      border: none; border-radius: 18px; font-size: 18px; font-weight: 800;
+      cursor: pointer; transition: 0.3s; margin-top: 10px;
+    }
+    .btn-main:hover { opacity: 0.9; transform: translateY(-2px); }
     .hidden { display: none; }
-    .btn-next { display: block; width: 100%; padding: 20px; background: #111; color: #fff; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; margin-top: 20px; cursor: pointer; }
-    .result-box { background: #f0f0f0; border-radius: 16px; padding: 24px; text-align: center; margin: 20px 0; }
+    
+    /* 結果表示 */
+    .result-header { font-size: 14px; color: #888; margin-bottom: 10px; }
+    .result-type { font-size: 32px; font-weight: 900; margin: 20px 0; color: #000; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div id="screen-top" class="card">
-      <h1>ひとりビジネス勝ち筋診断</h1>
-      <p style="text-align: center; color: #666;">生年月日と32の質問から、あなたの勝ち筋を導き出します。</p>
-      
-      <div style="margin-top: 30px;">
-        <label style="display: block; text-align: center; font-weight: bold;">生年月日を入力してください</label>
-        <div class="birth-input-group">
-          <input type="number" id="by" class="year" placeholder="1977" maxlength="4"> 年
-          <input type="number" id="bm" placeholder="03" maxlength="2"> 月
-          <input type="number" id="bd" placeholder="13" maxlength="2"> 日
+      <h1>ひとりビジネス<br>勝ち筋診断</h1>
+      <div class="input-box">
+        <p style="color:#666; font-size:15px;">まずは、あなたの生年月日を教えてください</p>
+        <div class="birth-inputs">
+          <input type="number" id="by" class="year" placeholder="1977"> 年
+          <input type="number" id="bm" placeholder="03"> 月
+          <input type="number" id="bd" placeholder="13"> 日
         </div>
       </div>
-      <button class="btn-next" onclick="startDiagnosis()">診断を開始する</button>
+      <button class="btn-main" onclick="start()">診断をはじめる</button>
     </div>
 
-    <div id="screen-question" class="card hidden">
-      <div class="progress-info" id="page-indicator">Step 1 / 4</div>
-      <div id="questions-area"></div>
-      <button id="nextPageBtn" class="btn-next" onclick="nextPage()">次の8問へ</button>
-    </div>
-
-    <div id="screen-result" class="card hidden">
-      <h1>診断完了</h1>
-      <div class="result-box">
-        <h2 id="res-type">分析中...</h2>
-        <p>※プロトタイプ版：生年月日の数秘からタイプを出しています</p>
+    <div id="screen-q" class="card hidden">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div id="p-fill" class="progress-fill"></div></div>
+        <div id="p-text" class="progress-text">Step 1 / 4</div>
       </div>
-      <button class="btn-next" onclick="downloadPdf()">結果をPDFで保存する</button>
-      <button style="background:none; border:none; color:#666; width:100%; cursor:pointer; margin-top:10px;" onclick="location.reload()">最初からやり直す</button>
+      <div id="q-list"></div>
+      <button id="next-btn" class="btn-main" onclick="next()">次の8問へ</button>
+    </div>
+
+    <div id="screen-res" class="card hidden" style="text-align: center;">
+      <div class="result-header">分析が完了しました</div>
+      <p id="res-name-label"></p>
+      <div class="result-type" id="res-type"></div>
+      <p style="font-size:14px; color:#888; margin-bottom:30px;">生年月日から導き出された、あなたの本質的な勝ち筋タイプです。</p>
+      <button class="btn-main" onclick="downloadPdf()">結果をPDFで保存する</button>
+      <p onclick="location.reload()" style="margin-top:20px; color:#888; cursor:pointer; font-size:14px;">最初からやり直す</p>
     </div>
   </div>
 
@@ -94,105 +139,68 @@
       { id: 32, text: "売り込みより、共感を生む導線が向いている" }
     ];
 
-    let currentPage = 0;
-    let answers = {};
+    let page = 0;
+    let ans = {};
 
-    function startDiagnosis() {
-      const y = document.getElementById('by').value;
-      const m = document.getElementById('bm').value;
-      const d = document.getElementById('bd').value;
-      if(!y || !m || !d) { alert("生年月日を入力してください"); return; }
+    function start() {
+      if(!document.getElementById('by').value || !document.getElementById('bm').value) return alert("生年月日を入力してください");
       document.getElementById('screen-top').classList.add('hidden');
-      document.getElementById('screen-question').classList.remove('hidden');
-      renderPage();
+      document.getElementById('screen-q').classList.remove('hidden');
+      render();
     }
 
-    function renderPage() {
-      const area = document.getElementById('questions-area');
-      area.innerHTML = '';
-      const start = currentPage * 8;
-      const end = start + 8;
-      const pageQuestions = QUESTIONS.slice(start, end);
+    function render() {
+      const list = document.getElementById('q-list');
+      list.innerHTML = '';
+      const items = QUESTIONS.slice(page * 8, (page + 1) * 8);
       
-      document.getElementById('page-indicator').innerText = `Step ${currentPage + 1} / 4`;
-      
-      pageQuestions.forEach((q, index) => {
-        const div = document.createElement('div');
-        div.className = 'q-container';
-        div.id = `q-wrap-${q.id}`;
-        div.innerHTML = `
+      document.getElementById('p-fill').style.width = ((page + 1) / 4 * 100) + '%';
+      document.getElementById('p-text').innerText = `Step ${page + 1} / 4`;
+
+      items.forEach(q => {
+        const d = document.createElement('div');
+        d.className = 'q-item';
+        d.id = `q-block-${q.id}`;
+        d.innerHTML = `
           <span class="q-text">${q.id}. ${q.text}</span>
           <div class="options">
-            <button class="opt-btn ${answers[q.id]==='A'?'active':''}" onclick="setAns(${q.id}, 'A')">かなりそう思う</button>
-            <button class="opt-btn ${answers[q.id]==='B'?'active':''}" onclick="setAns(${q.id}, 'B')">そこまでではない</button>
+            <button class="opt-btn ${ans[q.id]==='A'?'active':''}" onclick="select(${q.id},'A')">かなりそう思う</button>
+            <button class="opt-btn ${ans[q.id]==='B'?'active':''}" onclick="select(${q.id},'B')">そこまでではない</button>
           </div>
         `;
-        area.appendChild(div);
+        list.appendChild(d);
       });
-
-      document.getElementById('nextPageBtn').innerText = currentPage === 3 ? "結果を見る" : "次の8問へ";
-      window.scrollTo(0, 0);
+      document.getElementById('next-btn').innerText = page === 3 ? "結果を見る" : "次の8問へ";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function setAns(id, val) {
-      answers[id] = val;
-      renderPage();
-      
-      // オートスクロール：回答した設問の次へ
-      const nextId = id + 1;
-      const nextEl = document.getElementById(`q-wrap-${nextId}`);
-      if(nextEl) {
-        setTimeout(() => {
-          nextEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
-      }
+    function select(id, v) {
+      ans[id] = v;
+      render();
+      const next = document.getElementById(`q-block-${id + 1}`);
+      if(next) setTimeout(() => next.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
     }
 
-    function nextPage() {
-      const start = currentPage * 8;
-      for(let i=start+1; i<=start+8; i++) {
-        if(!answers[i]) { alert("未回答の質問があります"); return; }
-      }
-      
-      if(currentPage < 3) {
-        currentPage++;
-        renderPage();
-      } else {
-        showResult();
-      }
+    function next() {
+      const startIdx = page * 8;
+      for(let i=startIdx+1; i<=startIdx+8; i++) if(!ans[i]) return alert("未回答の質問があります");
+      if(page < 3) { page++; render(); } else { showRes(); }
     }
 
-    function showResult() {
-      document.getElementById('screen-question').classList.add('hidden');
-      document.getElementById('screen-result').classList.remove('hidden');
-      
-      const y = document.getElementById('by').value;
-      const m = document.getElementById('bm').value;
-      const d = document.getElementById('bd').value;
-      const seed = (parseInt(y) + parseInt(m) + parseInt(d)) % 5;
+    function showRes() {
+      document.getElementById('screen-q').classList.add('hidden');
+      document.getElementById('screen-res').classList.remove('hidden');
       const types = ["導く太陽", "深海探求", "旋風ムーブメント", "共鳴の灯火", "静かな革命"];
-      document.getElementById('res-type').innerText = `あなたの勝ち筋タイプ：${types[seed]}`;
+      const seed = (parseInt(document.getElementById('by').value) + parseInt(document.getElementById('bm').value)) % 5;
+      document.getElementById('res-type').innerText = `【${types[seed]}】`;
     }
 
     function downloadPdf() {
-      const type = document.getElementById('res-type').innerText;
-      const y = document.getElementById('by').value;
-      const m = document.getElementById('bm').value;
-      const d = document.getElementById('bd').value;
-      
-      const printWindow = window.open("", "_blank");
-      printWindow.document.write(`
-        <html><head><title>診断結果</title><style>body{font-family:sans-serif;padding:40px;}</style></head>
-        <body>
-          <h1>ひとりビジネス勝ち筋診断 結果</h1>
-          <p>生年月日：${y}年${m}月${d}日</p>
-          <hr>
-          <h2>${type}</h2>
-          <p>※本PDFはプロトタイプ版の出力結果です。</p>
-        </body></html>
-      `);
-      printWindow.document.close();
-      setTimeout(() => { printWindow.print(); }, 500);
+      const t = document.getElementById('res-type').innerText;
+      const win = window.open("", "_blank");
+      win.document.write(`<html><body style="font-family:sans-serif;padding:50px;"><h1>診断結果</h1><hr><h2>タイプ：${t}</h2><p>生年月日より算出</p></body></html>`);
+      win.document.close();
+      setTimeout(() => win.print(), 500);
     }
   </script>
 </body>
