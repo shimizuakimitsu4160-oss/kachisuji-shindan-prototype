@@ -646,6 +646,7 @@ function analyzeAnswers() {
       `);
       printWindow.document.close();
       printWindow.focus();
+      printWindow.document.charset = "UTF-8";
       setTimeout(() => {
         printWindow.print();
       }, 500);
