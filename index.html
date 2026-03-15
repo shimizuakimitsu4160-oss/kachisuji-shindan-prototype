@@ -4,193 +4,65 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ひとりビジネス勝ち筋診断 プロトタイプ</title>
-    <style>
+  <style>
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Meiryo", sans-serif;
       background: linear-gradient(135deg, #f7f7f7, #ffffff);
       color: #111;
     }
-    .wrap {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 24px 16px 60px;
-    }
-    .card {
-      background: #fff;
-      border-radius: 24px;
-      box-shadow: 0 12px 36px rgba(0,0,0,0.08);
-      padding: 24px;
-    }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 60px; }
+    .card { background: #fff; border-radius: 24px; box-shadow: 0 12px 36px rgba(0,0,0,0.08); padding: 24px; }
     h1 { font-size: 34px; margin: 0 0 8px; }
-    h2 { font-size: 28px; margin: 0 0 12px; }
-    h3 { font-size: 22px; margin: 0 0 8px; }
-    p { line-height: 1.8; }
-    .muted { color: #666; }
-    .badge {
-      display: inline-block;
-      background: #111;
-      color: #fff;
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 12px;
-      margin-bottom: 12px;
-    }
-    .grid {
-      display: grid;
-      gap: 16px;
-    }
-    .grid-2 {
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    input {
-      width: 100%;
-      padding: 14px 16px;
-      border: 1px solid #ddd;
-      border-radius: 14px;
-      font-size: 16px;
-    }
-    .btn-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-    button {
-      border: none;
-      border-radius: 14px;
-      padding: 14px 18px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .btn-primary {
-      background: #111;
-      color: #fff;
-    }
-    .btn-secondary {
-      background: #efefef;
-      color: #111;
-    }
+    h2 { font-size: 24px; margin: 0 0 12px; }
+    h3 { font-size: 20px; margin: 0 0 8px; }
+    p { line-height: 1.8; margin: 0 0 16px; }
+    .muted { color: #666; font-size: 14px; }
+    .badge { display: inline-block; background: #111; color: #fff; border-radius: 999px; padding: 6px 12px; font-size: 12px; margin-bottom: 12px; }
+    .grid { display: grid; gap: 16px; }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    input { width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 14px; font-size: 16px; }
+    .btn-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 24px; }
+    button { border: none; border-radius: 14px; padding: 14px 18px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .btn-primary { background: #111; color: #fff; }
+    .btn-secondary { background: #efefef; color: #111; }
     .btn-full { width: 100%; }
-    .progress {
-      width: 100%;
-      height: 12px;
-      background: #eee;
-      border-radius: 999px;
-      overflow: hidden;
-      margin: 16px 0 6px;
-    }
-    .progress-bar {
-      height: 100%;
-      background: #111;
-      width: 0%;
-      transition: width 0.2s ease;
-    }
-    .question-box {
-      background: #fafafa;
-      border-radius: 22px;
-      padding: 24px;
-    }
-    .choice {
-      width: 100%;
-      text-align: left;
-      border: 1px solid #ddd;
-      background: #fff;
-      padding: 18px;
-      border-radius: 18px;
-      margin-bottom: 12px;
-    }
-    .choice.active {
-      background: #111;
-      color: #fff;
-      border-color: #111;
-    }
-    .result-card {
-      border: 1px solid #eee;
-      border-radius: 22px;
-      padding: 20px;
-      margin-bottom: 16px;
-      background: #fff;
-    }
-    .result-number {
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-    .radar-item { margin-bottom: 12px; }
-    .radar-head {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-    .radar-bar {
-      width: 100%;
-      height: 10px;
-      background: #eee;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .radar-fill {
-      height: 100%;
-      background: #111;
-      border-radius: 999px;
-    }
+    .progress { width: 100%; height: 12px; background: #eee; border-radius: 999px; overflow: hidden; margin: 16px 0 6px; }
+    .progress-bar { height: 100%; background: #111; width: 0%; transition: width 0.2s ease; }
+    .question-card { margin-top: 24px; }
+    .answer-btn { width: 100%; text-align: left; border: 1px solid #ddd; background: #fff; padding: 18px; border-radius: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+    .answer-btn.selected { background: #111; color: #fff; border-color: #111; }
+    .answer-label { font-weight: bold; width: 24px; }
+    .result-card { border: 1px solid #eee; border-radius: 22px; padding: 20px; margin-bottom: 16px; background: #fafafa; }
     .hidden { display: none; }
-    @media (max-width: 640px) {
-      h1 { font-size: 28px; }
-      h2 { font-size: 24px; }
-      .card { padding: 18px; }
-    }
-      .answer-btn.selected {
-  border: 2px solid #111;
-  background: #111;
-  color: #fff;
-}
-
-.answer-btn.selected .answer-label {
-  color: #fff;
-}
   </style>
   <script src="kachisuji_implementation_data.js"></script>
 </head>
 <body>
   <div class="wrap">
-    <div class="card">
-      <div class="badge">プロトタイプ版 / 1ファイル</div>
+    <div id="screen-top" class="card">
+      <div class="badge">プロトタイプ版</div>
       <h1>ひとりビジネス勝ち筋診断</h1>
       <p class="muted">生年月日と32問から、あなたの勝ち筋を見つける診断です。</p>
-
-      <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
-      <div id="progressText" class="muted">進行状況 0%</div>
-
-      <div id="screen-top">
-        <div class="grid grid-2" style="margin-top: 24px;">
-          <div>
-            <label for="name">お名前（任意）</label>
-            <input id="name" type="text" placeholder="例）清水章充" />
-          </div>
-          <div>
-            <label for="birthdate">生年月日（必須）</label>
-            <input id="birthdate" type="date" />
-          </div>
+      <div class="grid grid-2" style="margin-top: 24px;">
+        <div>
+          <label for="name">お名前（任意）</label>
+          <input id="name" type="text" placeholder="例）清水章充" />
         </div>
-        <div style="margin-top: 20px;">
-          <button id="startBtn" class="btn-primary btn-full">診断をはじめる</button>
+        <div>
+          <label for="birthdate">生年月日（必須）</label>
+          <input id="birthdate" type="date" />
         </div>
       </div>
-
-      <div id="screen-question" class="hidden" style="margin-top: 24px;"></div>
-      <div id="screen-result" class="hidden" style="margin-top: 24px;"></div>
+      <div style="margin-top: 20px;">
+        <button id="startBtn" class="btn-primary btn-full">診断をはじめる</button>
+      </div>
     </div>
+
+    <div id="screen-question" class="card hidden"></div>
+    <div id="screen-result" class="card hidden"></div>
   </div>
 
   <script>
@@ -229,54 +101,14 @@
       { id: 32, category: "marketing", text: "売り込みより、共感を生む導線が向いている", a: "かなりそう思う", b: "そこまでではない" }
     ];
 
-    const RESULT_MASTER = {
-      winBelief: {
-        high: { title: "導く太陽", summary: "あなたの仕事の勝ち観は、自分の信念や在り方で周囲に光を届けることです。理念や想いが強みとして伝わりやすい流れがあります。" },
-        low: { title: "成果設計", summary: "あなたの仕事の勝ち観は、成果につながる形に整理して価値を届けることです。実務と再現性を整えるほど強みが活きやすくなります。" }
-      },
-      workStyle: {
-        high: { title: "新価値を生み出して勝つ", summary: "変化や直感を活かしながら、まだ見えていない価値を形にしていく働き方に強みがあります。" },
-        low: { title: "構造を整えて勝つ", summary: "整理・設計・仕組み化で強みが出る働き方です。土台をつくるほど、継続的な成果につながりやすくなります。" }
-      },
-      customer: {
-        high: { title: "深い悩みを抱えた顧客", summary: "あなたと相性が良いのは、悩みが深く、本質的な支援を求めている顧客です。深い伴走の中で価値が伝わりやすいです。" },
-        low: { title: "課題が明確な顧客", summary: "あなたと相性が良いのは、課題が明確で、解決策を求めている顧客です。価値を整理して見せると選ばれやすくなります。" }
-      },
-      marketing: {
-        high: { title: "行動と接点数を増やして勝つ", summary: "あなたの集客の勝ち筋は、接点を増やし、会いに行き、動く中で信頼を積み上げることです。" },
-        low: { title: "言葉と導線を整えて勝つ", summary: "あなたの集客の勝ち筋は、発信・見せ方・導線設計を整えることです。安心感や分かりやすさが武器になります。" }
-      },
-      partnerWork: {
-        high: { title: "整えて支える仲間", summary: "働き方の勝ち筋パートナーは、あなたの発想や推進力を整理し、形にするのを支えてくれる存在です。" },
-        low: { title: "自走して進める仲間", summary: "働き方の勝ち筋パートナーは、自走力があり、判断が早く、流れを前に進めてくれる存在です。" }
-      },
-      partnerMarketing: {
-        high: { title: "共感を広げる仲間", summary: "集客の勝ち筋パートナーは、あなたにない集客機能を補い、言葉や紹介の流れを広げてくれる存在です。" },
-        low: { title: "導線を整える仲間", summary: "集客の勝ち筋パートナーは、ブランドの一貫性を保ちながら、見せ方や動線を整えてくれる存在です。" }
-      },
-      weakness: {
-        high: { title: "抱え込み停滞", summary: "あなたの負け筋は、頑張りすぎ、人に合わせすぎ、公開の遅れです。全部を抱えすぎると、本来の魅力が鈍りやすくなります。" },
-        low: { title: "慎重すぎる停滞", summary: "あなたの負け筋は、整えることを優先しすぎて動くタイミングを逃すことです。見せながら改善すると流れが良くなります。" }
-      }
-    };
-
-    const WORKSTYLE_RADAR_LABELS = ["直感", "構造化", "共感", "推進力", "独自性", "継続力"];
-    const MARKETING_RADAR_LABELS = ["行動量", "言語化", "世界観", "紹介力", "仕組み化", "提案力"];
-
     let step = 0;
     let answers = {};
-
     const screenTop = document.getElementById("screen-top");
     const screenQuestion = document.getElementById("screen-question");
     const screenResult = document.getElementById("screen-result");
-    const progressBar = document.getElementById("progressBar");
-    const progressText = document.getElementById("progressText");
-    const nameInput = document.getElementById("name");
-    const birthdateInput = document.getElementById("birthdate");
-    const startBtn = document.getElementById("startBtn");
 
-    startBtn.addEventListener("click", () => {
-      if (!birthdateInput.value) {
+    document.getElementById("startBtn").addEventListener("click", () => {
+      if (!document.getElementById("birthdate").value) {
         alert("生年月日を入れてください。");
         return;
       }
@@ -284,377 +116,27 @@
       render();
     });
 
-    function getBirthSeed(birthdate) {
-      if (!birthdate) return 0;
-      return birthdate.replaceAll("-", "").split("").map(Number).reduce((a, b) => a + b, 0) % 5;
-    }
-
-function analyzeAnswers() {
-  const birthdaySeed = getBirthSeed(birthdate);
-
-  const workStyleScores = {
-    deep: 0,
-    detail: 0,
-    team: 0,
-    expert: 0,
-    result: 0,
-    newValue: 0,
-    shortcut: 0,
-    dialogue: 0,
-    trend: 0
-  };
-
-  const marketingScores = {
-    collab: 0,
-    broadcast: 0,
-    words: 0,
-    referral: 0,
-    funnel: 0,
-    action: 0,
-    soft: 0,
-    place: 0
-  };
-
-  for (let q = 1; q <= 12; q++) {
-    const answer = answers[q];
-    const map = window.kachisujiData.workStyleScoring[q];
-    if (answer && map && map[answer]) {
-      workStyleScores[map[answer]] += 1;
-    }
-  }
-
-  for (let q = 13; q <= 20; q++) {
-    const answer = answers[q];
-    const map = window.kachisujiData.marketingScoring[q];
-    if (answer && map && map[answer]) {
-      marketingScores[map[answer]] += 1;
-    }
-  }
-
-  if (window.kachisujiData.applyMarketingBonuses) {
-    window.kachisujiData.applyMarketingBonuses(answers, marketingScores);
-  }
-
-  function pickWinner(scores, tieBreakQuestions, scoringMap) {
-    const max = Math.max(...Object.values(scores));
-    let candidates = Object.keys(scores).filter(k => scores[k] === max);
-
-    if (candidates.length === 1) return candidates[0];
-
-    for (const q of tieBreakQuestions) {
-      const answer = answers[q];
-      const key = scoringMap[q] && scoringMap[q][answer];
-      if (key && candidates.includes(key)) return key;
-    }
-
-    return candidates[0];
-  }
-
-  const workStyleKey = pickWinner(
-    workStyleScores,
-    window.kachisujiData.workTieBreakQuestions,
-    window.kachisujiData.workStyleScoring
-  );
-
-  const marketingKey = pickWinner(
-    marketingScores,
-    window.kachisujiData.marketingTieBreakQuestions,
-    window.kachisujiData.marketingScoring
-  );
-
-  const customerModifier =
-    answers[21] === "A" ? "共鳴・温度感重視" : "知識・専門性重視";
-
-  let aCount = 0;
-  let bCount = 0;
-  for (let q = 22; q <= 32; q++) {
-    if (answers[q] === "A") aCount += 1;
-    if (answers[q] === "B") bCount += 1;
-  }
-
-  let losingRiskLabel = "感情・勢い先行リスク";
-  if (bCount > aCount) losingRiskLabel = "考えすぎ・停止リスク";
-  if (aCount === bCount) {
-    let aTie = 0;
-    let bTie = 0;
-    [23, 30, 32].forEach(q => {
-      if (answers[q] === "A") aTie += 1;
-      if (answers[q] === "B") bTie += 1;
-    });
-    losingRiskLabel = aTie >= bTie ? "感情・勢い先行リスク" : "考えすぎ・停止リスク";
-  }
-
-  const winBeliefType = [
-    "導く太陽",
-    "深海探求",
-    "旋風ムーブメント",
-    "共鳴の灯火",
-    "静かな革命"
-  ][birthdaySeed] || "導く太陽";
-
-  return {
-    birthdaySeed,
-    winBeliefType,
-    workStyleKey,
-    workStyleScores,
-    marketingKey,
-    marketingScores,
-    customerKey: workStyleKey,
-    customerModifier,
-    partnerWorkKey: workStyleKey,
-    partnerMarketingKey: marketingKey,
-    losingTypeKey: winBeliefType,
-    losingRiskLabel
-  };
-}
-
-    function selectAnswer(id, value) {
-      answers[id] = value;
-      renderQuestion();
-    }
-
-    function goBack() {
-      if (step > 1) step -= 1;
-      else step = 0;
-      render();
-    }
-
-    function goNext() {
-      const q = QUESTIONS[step - 1];
-      if (!answers[q.id]) {
-        alert("AかBを選んでください。");
-        return;
-      }
-      step += 1;
-      if(step > QUESTIONS.length){
-  renderResult();
-  return;
-}
-      render();
-    }
-
-    function restartDiagnosis() {
-      step = 0;
-      answers = {};
-      render();
-    }
     function render() {
-  if (step === 0) {
-    return;
-  }
+      if (step === 0) {
+        screenTop.classList.remove("hidden");
+        screenQuestion.classList.add("hidden");
+        screenResult.classList.add("hidden");
+      } else if (step <= QUESTIONS.length) {
+        screenTop.classList.add("hidden");
+        screenQuestion.classList.remove("hidden");
+        screenResult.classList.add("hidden");
+        renderQuestion();
+      } else {
+        screenTop.classList.add("hidden");
+        screenQuestion.classList.add("hidden");
+        screenResult.classList.remove("hidden");
+        renderResult();
+      }
+    }
 
-  if (step >= 1 && step <= QUESTIONS.length) {
-    renderQuestion();
-    return;
-  }
-
-  renderResult();
-}
     function renderQuestion() {
-  const q = QUESTIONS[step - 1];
-  if (!q) return;
-
-  const selected = answers[q.id];
-
-  document.getElementById("screen-question").innerHTML = `
-    <div class="card">
-      <div class="progress-text">進行状況 ${Math.round((step / QUESTIONS.length) * 100)}%</div>
-      <div class="progress"><div class="progress-bar" style="width:${(step / QUESTIONS.length) * 100}%"></div></div>
-      <div class="question-count">質問 ${step} / ${QUESTIONS.length}</div>
-
-      <div class="question-card">
-        <div class="question-number">Q${q.id}</div>
-        <h2>${q.text}</h2>
-
-        <button class="answer-btn ${selected === "A" ? "selected" : ""}" onclick="selectAnswer(${q.id}, 'A')">
-          <div class="answer-label">A</div>
-          <div>${q.a}</div>
-        </button>
-
-        <button class="answer-btn ${selected === "B" ? "selected" : ""}" onclick="selectAnswer(${q.id}, 'B')">
-          <div class="answer-label">B</div>
-          <div>${q.b}</div>
-        </button>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-secondary" onclick="goBack()">戻る</button>
-        <button class="btn-primary" onclick="goNext()">次へ</button>
-      </div>
-    </div>
-  `;
-
-  document.getElementById("screen-question").classList.remove("hidden");
-  document.getElementById("screen-result").classList.add("hidden");
-}
-
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function downloadPdf() {
-      const results = analyzeAnswers();
-      const printWindow = window.open("", "_blank");
-      const personName = nameInput.value || "ゲスト";
-      const birthdate = birthdateInput.value || "未入力";
-
-      const resultHtml = results.map((item, index) => {
-        if (item.radar) {
-          return `
-            <section class="result-card">
-              <div class="result-number">${index + 1}. ${escapeHtml(item.label)}</div>
-              <h3>${escapeHtml(item.label)}</h3>
-              <p class="muted">現時点の仮レーダー表示です。正式版では、設問32と診断ロジックに応じて数値を確定します。</p>
-              ${item.radar.map(r => `
-                <div class="radar-item">
-                  <div class="radar-head"><span>${escapeHtml(r.label)}</span><span>${r.value} / 5</span></div>
-                  <div class="radar-bar"><div class="radar-fill" style="width:${r.value * 20}%"></div></div>
-                </div>
-              `).join("")}
-            </section>
-          `;
-        }
-
-        return `
-          <section class="result-card">
-            <div class="result-number">${index + 1}. ${escapeHtml(item.label)}</div>
-            <h3>${escapeHtml(item.title)}</h3>
-            <p>${escapeHtml(item.summary)}</p>
-          </section>
-        `;
-      }).join("");
-
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="ja">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>勝ち筋診断PDF</title>
-          <style>
-            body {
-              font-family: "Yu Gothic", "Hiragino Sans", "Meiryo", sans-serif;
-              margin: 0;
-              color: #111;
-              background: #fff;
-            }
-            .page {
-              max-width: 900px;
-              margin: 0 auto;
-              padding: 32px 28px 60px;
-            }
-            h1 {
-              font-size: 30px;
-              margin: 0 0 8px;
-            }
-            h2 {
-              font-size: 20px;
-              margin: 0 0 10px;
-            }
-            h3 {
-              font-size: 28px;
-              margin: 0 0 10px;
-            }
-            p {
-              line-height: 1.9;
-              margin: 0;
-            }
-            .lead {
-              margin-bottom: 24px;
-            }
-            .meta {
-              margin-bottom: 28px;
-              line-height: 1.9;
-            }
-            .result-card {
-              border: 1px solid #ddd;
-              border-radius: 18px;
-              padding: 18px;
-              margin-bottom: 16px;
-              page-break-inside: avoid;
-            }
-            .result-number {
-              color: #666;
-              font-size: 14px;
-              margin-bottom: 8px;
-            }
-            .muted {
-              color: #666;
-            }
-            .radar-item {
-              margin-top: 10px;
-            }
-            .radar-head {
-              display: flex;
-              justify-content: space-between;
-              font-size: 14px;
-              margin-bottom: 6px;
-            }
-            .radar-bar {
-              width: 100%;
-              height: 10px;
-              background: #eee;
-              border-radius: 999px;
-              overflow: hidden;
-            }
-            .radar-fill {
-              height: 100%;
-              background: #111;
-            }
-            .note {
-              margin-top: 16px;
-              font-size: 12px;
-              color: #666;
-            }
-            @media print {
-              body {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-              }
-              .page {
-                padding: 16mm 14mm 18mm;
-              }
-            }.answer-btn.selected {
-  border: 2px solid #111;
-  background: #111;
-  color: #fff;
-}
-
-.answer-btn.selected .answer-label {
-  color: #fff;
-}
-          </style>
-        </head>
-        <body>
-          <div class="page">
-            <h1>ひとりビジネス勝ち筋診断</h1>
-            <p class="lead">生年月日と32問の回答をもとに、現時点のプロトタイプ結果をまとめています。</p>
-            <div class="meta">
-              <div><strong>お名前：</strong> ${escapeHtml(personName)}</div>
-              <div><strong>生年月日：</strong> ${escapeHtml(birthdate)}</div>
-            </div>
-            ${resultHtml}
-            <div class="note">※ このPDFはプロトタイプ版です。正式版では、設問・ロジック・レーダー数値・結果文を差し替えます。</div>
-          </div>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.focus();
-      printWindow.document.charset = "UTF-8";
-      setTimeout(() => {
-        printWindow.print();
-      }, 500);
-    }
-if (window.kachisujiData && window.kachisujiData.questions) {
-  QUESTIONS = window.kachisujiData.questions;
-}
-    render();
-  </script>
-</body>
-</html>
+      const q = QUESTIONS[step - 1];
+      const selected = answers[q.id];
+      screenQuestion.innerHTML = `
+        <div class="progress"><div class="progress-bar" style="width:${(step / QUESTIONS.length) * 100}%"></div></div>
+        <p class
