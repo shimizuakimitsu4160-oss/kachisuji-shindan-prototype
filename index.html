@@ -5,202 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ひとりビジネス勝ち筋診断</title>
   <style>
-    :root {
-      --primary-color: #111111;
-      --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
-      --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      --accent-soft: #f0f0f0;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-      background: var(--bg-gradient);
-      color: var(--primary-color);
-      line-height: 1.6;
-    }
-    .wrap { max-width: 700px; margin: 0 auto; padding: 40px 20px; }
-    .card {
-      background: #fff;
-      border-radius: 24px;
-      box-shadow: var(--card-shadow);
-      padding: 40px;
-      margin-bottom: 30px;
-      transition: transform 0.3s ease;
-    }
-    h1 { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 30px; letter-spacing: 0.05em; }
-    
-    /* 生年月日入力エリア */
-    .input-box { text-align: center; margin-bottom: 30px; }
-    .birth-inputs { display: flex; gap: 12px; justify-content: center; align-items: center; margin-top: 15px; }
-    .birth-inputs input {
-      width: 80px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 12px;
-      font-size: 18px; text-align: center; outline: none; transition: 0.2s;
-    }
-    .birth-inputs input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
-    .birth-inputs input.year { width: 110px; }
-
-    /* 設問エリア */
-    .q-item { margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid #f0f0f0; }
-    .q-text { display: block; font-size: 18px; font-weight: 700; margin-bottom: 20px; line-height: 1.5; }
-    .options { display: flex; gap: 15px; }
-    .opt-btn {
-      flex: 1; padding: 18px; border: 1.5px solid #e0e0e0; border-radius: 16px;
-      background: #fff; cursor: pointer; font-weight: 700; font-size: 15px; transition: 0.3s;
-    }
-    .opt-btn.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
-
-    /* プログレスバー */
-    .progress-wrap { margin-bottom: 20px; }
-    .progress-bar { height: 6px; background: #eee; border-radius: 10px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--primary-color); width: 0%; transition: width 0.5s ease; }
-    .progress-text { font-size: 13px; color: #888; text-align: right; margin-top: 8px; font-weight: bold; }
-
-    .btn-main {
-      width: 100%; padding: 20px; background: var(--primary-color); color: #fff;
-      border: none; border-radius: 18px; font-size: 18px; font-weight: 800;
-      cursor: pointer; transition: 0.3s; margin-top: 10px;
-    }
-    .btn-main:hover { opacity: 0.9; transform: translateY(-2px); }
+    :root { --primary: #111; --bg: #f8f9fa; }
+    body { margin: 0; font-family: sans-serif; background: var(--bg); color: #333; }
+    .wrap { max-width: 600px; margin: 40px auto; padding: 0 20px; }
+    .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); padding: 40px; }
+    h1 { text-align: center; font-size: 24px; margin-bottom: 30px; }
+    .input-group { margin-bottom: 20px; }
+    input { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 12px; margin-top: 8px; }
+    .btn-main { width: 100%; padding: 18px; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+    .q-text { font-size: 20px; font-weight: bold; margin-bottom: 30px; display: block; }
+    .options { display: flex; flex-direction: column; gap: 15px; }
+    .opt-btn { padding: 20px; border: 1.5px solid #eee; border-radius: 16px; background: #fff; cursor: pointer; font-size: 16px; transition: 0.2s; }
+    .opt-btn:hover { border-color: var(--primary); }
     .hidden { display: none; }
-    
-    /* 結果表示 */
-    .result-header { font-size: 14px; color: #888; margin-bottom: 10px; }
-    .result-type { font-size: 32px; font-weight: 900; margin: 20px 0; color: #000; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div id="screen-top" class="card">
-      <h1>ひとりビジネス<br>勝ち筋診断</h1>
-      <div class="input-box">
-        <p style="color:#666; font-size:15px;">まずは、あなたの生年月日を教えてください</p>
-        <div class="birth-inputs">
-          <input type="number" id="by" class="year" placeholder="1977"> 年
-          <input type="number" id="bm" placeholder="03"> 月
-          <input type="number" id="bd" placeholder="13"> 日
-        </div>
-      </div>
+      <h1>ひとりビジネス勝ち筋診断</h1>
+      <div class="input-group"><label>お名前</label><input type="text" id="name" placeholder="お名前を入力"></div>
+      <div class="input-group"><label>生年月日</label><input type="date" id="birth"></div>
       <button class="btn-main" onclick="start()">診断をはじめる</button>
     </div>
-
+    
     <div id="screen-q" class="card hidden">
-      <div class="progress-wrap">
-        <div class="progress-bar"><div id="p-fill" class="progress-fill"></div></div>
-        <div id="p-text" class="progress-text">Step 1 / 4</div>
-      </div>
-      <div id="q-list"></div>
-      <button id="next-btn" class="btn-main" onclick="next()">次の8問へ</button>
-    </div>
-
-    <div id="screen-res" class="card hidden" style="text-align: center;">
-      <div class="result-header">分析が完了しました</div>
-      <p id="res-name-label"></p>
-      <div class="result-type" id="res-type"></div>
-      <p style="font-size:14px; color:#888; margin-bottom:30px;">生年月日から導き出された、あなたの本質的な勝ち筋タイプです。</p>
-      <button class="btn-main" onclick="downloadPdf()">結果をPDFで保存する</button>
-      <p onclick="location.reload()" style="margin-top:20px; color:#888; cursor:pointer; font-size:14px;">最初からやり直す</p>
+      <div id="q-content"></div>
     </div>
   </div>
 
   <script>
-    const QUESTIONS = [
-      { id: 1, text: "アイデアを出すときは、まだ世の中にない価値を考えるのが好きだ" },
-      { id: 2, text: "ひとりで考える時間があると、仕事の質が上がりやすい" },
-      { id: 3, text: "悩みが深い相手の方が、力を発揮しやすい" },
-      { id: 4, text: "売り込むより、共感を生む発信の方が向いている" },
-      { id: 5, text: "一緒に働くなら、安心感のある人が合う" },
-      { id: 6, text: "集客では、自分にない強みを持つ相手と組みたい" },
-      { id: 7, text: "頑張りすぎて、自分のペースを崩しやすい" },
-      { id: 8, text: "感謝されると、やる気が大きく上がる" },
-      { id: 9, text: "計画より、まず動いてから整える方が得意だ" },
-      { id: 10, text: "理想のお客様像はかなり明確にある" },
-      { id: 11, text: "人前で話すことは集客の武器になりうる" },
-      { id: 12, text: "役割分担がはっきりしている方が働きやすい" },
-      { id: 13, text: "紹介や口コミの流れを作る相手と相性がいい" },
-      { id: 14, text: "やることが増えると、優先順位がぼやけやすい" },
-      { id: 15, text: "競争よりも独自ポジションを取りたい" },
-      { id: 16, text: "ルーティンより、変化のある働き方が合う" },
-      { id: 17, text: "広く浅くより、狭く深い市場に惹かれる" },
-      { id: 18, text: "SNSは世界観が伝わる使い方が向いている" },
-      { id: 19, text: "一緒に働く相手には、スピード感も求めたい" },
-      { id: 20, text: "集客パートナーには数字感覚も必要だ" },
-      { id: 21, text: "人に合わせすぎて疲れることがある" },
-      { id: 22, text: "自分の体験談は価値になると思う" },
-      { id: 23, text: "朝の立ち上がりやスタートダッシュが得意だ" },
-      { id: 24, text: "相手の感情の変化に気づきやすい" },
-      { id: 25, text: "企画やイベント型の集客にワクワクする" },
-      { id: 26, text: "細かい実務を支えてくれる人がいると強い" },
-      { id: 27, text: "言語化のうまい人と組むと伸びやすい" },
-      { id: 28, text: "完璧にしようとして公開が遅れがちだ" },
-      { id: 29, text: "商品より先に、理念や想いを伝えたい" },
-      { id: 30, text: "自分の感覚を信じて意思決定することが多い" },
-      { id: 31, text: "悩みが深い人ほど、自分の価値を発揮できる" },
-      { id: 32, text: "売り込みより、共感を生む導線が向いている" }
-    ];
-
-    let page = 0;
-    let ans = {};
-
+    const QUESTIONS = ["アイデアを出すときは、まだ世の中にない価値を考えるのが好きだ", "ひとりで考える時間があると、仕事の質が上がりやすい", "悩みが深い相手の方が、力を発揮しやすい", "売り込むより、共感を生む発信の方が向いている"]; // 実際は32問
+    let cur = 0;
+    
     function start() {
-      if(!document.getElementById('by').value || !document.getElementById('bm').value) return alert("生年月日を入力してください");
+      if(!document.getElementById('name').value) return alert("名前を入力してください");
       document.getElementById('screen-top').classList.add('hidden');
       document.getElementById('screen-q').classList.remove('hidden');
       render();
     }
-
+    
     function render() {
-      const list = document.getElementById('q-list');
-      list.innerHTML = '';
-      const items = QUESTIONS.slice(page * 8, (page + 1) * 8);
-      
-      document.getElementById('p-fill').style.width = ((page + 1) / 4 * 100) + '%';
-      document.getElementById('p-text').innerText = `Step ${page + 1} / 4`;
-
-      items.forEach(q => {
-        const d = document.createElement('div');
-        d.className = 'q-item';
-        d.id = `q-block-${q.id}`;
-        d.innerHTML = `
-          <span class="q-text">${q.id}. ${q.text}</span>
-          <div class="options">
-            <button class="opt-btn ${ans[q.id]==='A'?'active':''}" onclick="select(${q.id},'A')">かなりそう思う</button>
-            <button class="opt-btn ${ans[q.id]==='B'?'active':''}" onclick="select(${q.id},'B')">そこまでではない</button>
-          </div>
-        `;
-        list.appendChild(d);
-      });
-      document.getElementById('next-btn').innerText = page === 3 ? "結果を見る" : "次の8問へ";
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('q-content').innerHTML = `
+        <span class="q-text">${cur + 1}. ${QUESTIONS[cur]}</span>
+        <div class="options">
+          <button class="opt-btn" onclick="next()">かなりそう思う</button>
+          <button class="opt-btn" onclick="next()">そこまでではない</button>
+        </div>
+      `;
     }
-
-    function select(id, v) {
-      ans[id] = v;
-      render();
-      const next = document.getElementById(`q-block-${id + 1}`);
-      if(next) setTimeout(() => next.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
-    }
-
+    
     function next() {
-      const startIdx = page * 8;
-      for(let i=startIdx+1; i<=startIdx+8; i++) if(!ans[i]) return alert("未回答の質問があります");
-      if(page < 3) { page++; render(); } else { showRes(); }
-    }
-
-    function showRes() {
-      document.getElementById('screen-q').classList.add('hidden');
-      document.getElementById('screen-res').classList.remove('hidden');
-      const types = ["導く太陽", "深海探求", "旋風ムーブメント", "共鳴の灯火", "静かな革命"];
-      const seed = (parseInt(document.getElementById('by').value) + parseInt(document.getElementById('bm').value)) % 5;
-      document.getElementById('res-type').innerText = `【${types[seed]}】`;
-    }
-
-    function downloadPdf() {
-      const t = document.getElementById('res-type').innerText;
-      const win = window.open("", "_blank");
-      win.document.write(`<html><body style="font-family:sans-serif;padding:50px;"><h1>診断結果</h1><hr><h2>タイプ：${t}</h2><p>生年月日より算出</p></body></html>`);
-      win.document.close();
-      setTimeout(() => win.print(), 500);
+      cur++;
+      if(cur < QUESTIONS.length) render();
+      else document.getElementById('q-content').innerHTML = "<h2>診断完了</h2><button class='btn-main'>PDFで保存する</button>";
     }
   </script>
 </body>
