@@ -139,4 +139,65 @@
       const selected = answers[q.id];
       screenQuestion.innerHTML = `
         <div class="progress"><div class="progress-bar" style="width:${(step / QUESTIONS.length) * 100}%"></div></div>
-        <p class
+        <p class="muted">質問 ${step} / ${QUESTIONS.length}</p>
+        <h2>${q.text}</h2>
+        <button class="answer-btn ${selected === 'A' ? 'selected' : ''}" onclick="selectAnswer(${q.id}, 'A')">
+          <span class="answer-label">A</span> ${q.a}
+        </button>
+        <button class="answer-btn ${selected === 'B' ? 'selected' : ''}" onclick="selectAnswer(${q.id}, 'B')">
+          <span class="answer-label">B</span> ${q.b}
+        </button>
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="goBack()">戻る</button>
+          <button class="btn-primary" onclick="goNext()">次へ</button>
+        </div>
+      `;
+    }
+
+    function selectAnswer(id, val) {
+      answers[id] = val;
+      renderQuestion();
+    }
+    function goBack() { step--; render(); }
+    function goNext() { 
+      if (!answers[QUESTIONS[step-1].id]) { alert("回答を選択してください"); return; }
+      step++; render(); 
+    }
+
+    function analyze() {
+      const birth = document.getElementById("birthdate").value;
+      const seed = birth.replace(/-/g, "").split("").reduce((a, b) => a + Number(b), 0) % 5;
+      const types = ["導く太陽", "深海探求", "旋風ムーブメント", "共鳴の灯火", "静かな革命"];
+      return {
+        name: document.getElementById("name").value || "ゲスト",
+        birth: birth,
+        type: types[seed]
+      };
+    }
+
+    function renderResult() {
+      const res = analyze();
+      screenResult.innerHTML = `
+        <h1>診断結果</h1>
+        <div class="result-card">
+          <h3>${res.name} さんの勝ち筋タイプ</h3>
+          <h2>【${res.type}】</h2>
+          <p>プロトタイプ版のため、現在は生年月日からの基本属性を表示しています。</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="downloadPdf()">PDFを保存する</button>
+          <button class="btn-secondary" onclick="location.reload()">最初からやり直す</button>
+        </div>
+      `;
+    }
+
+    function downloadPdf() {
+      const res = analyze();
+      const printWindow = window.open("", "_blank");
+      printWindow.document.write('<html><head><meta charset="UTF-8"><title>診断結果PDF</title><style>body { font-family: sans-serif; padding: 40px; line-height: 1.6; }.box { border: 2px solid #111; padding: 20px; border-radius: 10px; }h1 { border-bottom: 2px solid #111; }</style></head><body><h1>ひとりビジネス勝ち筋診断 結果</h1><p><strong>お名前：</strong> ' + res.name + '</p><p><strong>生年月日：</strong> ' + res.birth + '</p><div class="box"><h2>勝ち筋タイプ：' + res.type + '</h2><p>※本PDFはプロトタイプ版です。</p></div></body></html>');
+      printWindow.document.close();
+      setTimeout(() => { printWindow.print(); }, 500);
+    }
+  </script>
+</body>
+</html>
