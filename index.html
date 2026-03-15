@@ -2,63 +2,53 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ひとりビジネス勝ち筋診断</title>
   <style>
-    :root { --primary: #111; --bg: #f8f9fa; }
-    body { margin: 0; font-family: sans-serif; background: var(--bg); color: #333; }
-    .wrap { max-width: 600px; margin: 40px auto; padding: 0 20px; }
-    .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); padding: 40px; }
-    h1 { text-align: center; font-size: 24px; margin-bottom: 30px; }
-    .input-group { margin-bottom: 20px; }
-    input { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 12px; margin-top: 8px; }
-    .btn-main { width: 100%; padding: 18px; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px; }
-    .q-text { font-size: 20px; font-weight: bold; margin-bottom: 30px; display: block; }
-    .options { display: flex; flex-direction: column; gap: 15px; }
-    .opt-btn { padding: 20px; border: 1.5px solid #eee; border-radius: 16px; background: #fff; cursor: pointer; font-size: 16px; transition: 0.2s; }
-    .opt-btn:hover { border-color: var(--primary); }
+    body { background: #f8f9fa; font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; }
+    .card { background: #fff; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); padding: 40px; width: 100%; max-width: 500px; }
+    .input-row { display: flex; gap: 5px; align-items: center; margin-top: 10px; }
+    input { padding: 10px; border: 1px solid #ddd; border-radius: 8px; flex: 1; }
+    .btn { width: 100%; padding: 15px; background: #000; color: #fff; border: none; border-radius: 10px; margin-top: 20px; cursor: pointer; }
     .hidden { display: none; }
+    h2 { font-size: 18px; margin-bottom: 20px; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div id="screen-top" class="card">
-      <h1>ひとりビジネス勝ち筋診断</h1>
-      <div class="input-group"><label>お名前</label><input type="text" id="name" placeholder="お名前を入力"></div>
-      <div class="input-group"><label>生年月日</label><input type="date" id="birth"></div>
-      <button class="btn-main" onclick="start()">診断をはじめる</button>
+  <div class="card" id="screen-top">
+    <h1>勝ち筋診断</h1>
+    <label>お名前</label><input type="text" id="name" style="width: 90%; margin-bottom: 20px;">
+    <label>生年月日</label>
+    <div class="input-row">
+      <input type="number" id="by" placeholder="1977">年
+      <input type="number" id="bm" placeholder="03">月
+      <input type="number" id="bd" placeholder="13">日
     </div>
-    
-    <div id="screen-q" class="card hidden">
-      <div id="q-content"></div>
-    </div>
+    <button class="btn" onclick="start()">診断をはじめる</button>
+  </div>
+
+  <div class="card hidden" id="screen-q">
+    <div id="q-content"></div>
   </div>
 
   <script>
-    const QUESTIONS = ["アイデアを出すときは、まだ世の中にない価値を考えるのが好きだ", "ひとりで考える時間があると、仕事の質が上がりやすい", "悩みが深い相手の方が、力を発揮しやすい", "売り込むより、共感を生む発信の方が向いている"]; // 実際は32問
+    const QUESTIONS = ["アイデアを出すときは、まだ世の中にない価値を考えるのが好きだ", "ひとりで考える時間があると、仕事の質が上がりやすい"]; 
     let cur = 0;
-    
     function start() {
-      if(!document.getElementById('name').value) return alert("名前を入力してください");
       document.getElementById('screen-top').classList.add('hidden');
       document.getElementById('screen-q').classList.remove('hidden');
       render();
     }
-    
     function render() {
       document.getElementById('q-content').innerHTML = `
-        <span class="q-text">${cur + 1}. ${QUESTIONS[cur]}</span>
-        <div class="options">
-          <button class="opt-btn" onclick="next()">かなりそう思う</button>
-          <button class="opt-btn" onclick="next()">そこまでではない</button>
-        </div>
+        <h2>${cur + 1}. ${QUESTIONS[cur]}</h2>
+        <button class="btn" onclick="next()">かなりそう思う</button>
+        <button class="btn" style="background:#666" onclick="next()">そこまでではない</button>
       `;
     }
-    
     function next() {
       cur++;
       if(cur < QUESTIONS.length) render();
-      else document.getElementById('q-content').innerHTML = "<h2>診断完了</h2><button class='btn-main'>PDFで保存する</button>";
+      else document.getElementById('q-content').innerHTML = "<h2>診断完了</h2><button class='btn' onclick='window.print()'>結果をPDFで保存する</button>";
     }
   </script>
 </body>
