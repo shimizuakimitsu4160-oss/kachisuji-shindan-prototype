@@ -2,59 +2,479 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ひとりビジネス勝ち筋診断</title>
   <style>
-    body { background: #f8f9fa; font-family: sans-serif; display: flex; justify-content: center; padding: 50px 20px; }
-    .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 40px; width: 100%; max-width: 400px; }
-    h1 { text-align: center; font-size: 22px; margin-bottom: 30px; font-weight: 800; }
-    label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-bottom: 8px; }
-    input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; margin-bottom: 20px; }
-    .birth-group { display: flex; gap: 5px; align-items: center; }
-    .birth-group input { margin-bottom: 0; text-align: center; }
-    .btn { width: 100%; padding: 16px; background: #111; color: #fff; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px; }
-    .hidden { display: none; }
-    h2 { font-size: 18px; text-align: center; margin-bottom: 30px; }
+    body {
+      background: #f8f9fa;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 50px 20px;
+      margin: 0;
+    }
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 520px;
+      box-sizing: border-box;
+    }
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 12px;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+    .lead {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      line-height: 1.8;
+      margin-bottom: 24px;
+      white-space: pre-line;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+      font-size: 14px;
+      color: #555;
+      display: block;
+      margin-bottom: 8px;
+      margin-top: 12px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+    .birth-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .birth-group input {
+      margin-bottom: 0;
+      text-align: center;
+    }
+    .btn {
+      width: 100%;
+      padding: 16px;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+      font-size: 15px;
+    }
+    .btn-sub {
+      background: #f0f0f0;
+      color: #333;
+    }
+    .hidden {
+      display: none;
+    }
+    h2 {
+      font-size: 20px;
+      text-align: center;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .q-top {
+      text-align: center;
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 8px;
+    }
+    .progress {
+      height: 8px;
+      background: #eee;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #111;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .note {
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+      margin-top: 6px;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
   <div class="card" id="screen-top">
     <h1>ひとりビジネス<br>勝ち筋診断</h1>
+    <div class="lead">
+統計学×心理学×ブランド戦略で
+選ばれつづける勝ち筋へ導く！
+    </div>
+
+    <div class="section-title">あなたの“仕事の勝ち筋”を見つける32の質問</div>
+
     <label>お名前</label>
     <input type="text" id="name" placeholder="お名前を入力">
-    
+
     <label>生年月日</label>
     <div class="birth-group">
-      <input type="number" id="by" placeholder="0000">年
-      <input type="number" id="bm" placeholder="00">月
-      <input type="number" id="bd" placeholder="00">日
+      <input type="number" id="by" placeholder="1977">年
+      <input type="number" id="bm" placeholder="03">月
+      <input type="number" id="bd" placeholder="13">日
     </div>
+    <div class="note">※ 生年月日は仕事の勝ち観タイプ判定に使用します</div>
+
     <button class="btn" onclick="start()">診断をはじめる</button>
   </div>
 
   <div class="card hidden" id="screen-q">
+    <div class="progress">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
     <div id="q-content"></div>
   </div>
 
+  <div class="card hidden" id="screen-end">
+    <h2>32問の回答が完了しました</h2>
+    <div class="lead">次は結果ページの実装に進みます。</div>
+    <button class="btn" onclick="window.scrollTo(0,0)">上へ戻る</button>
+  </div>
+
   <script>
-    const QUESTIONS = ["アイデアを出すときは、世の中にない価値を考えるのが好きだ", "ひとりで考える時間があると、仕事の質が上がる"]; 
+    const QUESTIONS = [
+      {
+        id: 1,
+        question: "ひらめきが生まれる瞬間はどちらが多い？",
+        choices: [
+          { value: "A", label: "人との会話の中で、突然アイデアが降りてくる" },
+          { value: "B", label: "ひとりで整理していると、自然と形になってくる" }
+        ]
+      },
+      {
+        id: 2,
+        question: "仕事をスタートするときのあなたは？",
+        choices: [
+          { value: "A", label: "まず動いてみる。道は走りながら整える" },
+          { value: "B", label: "全体像を描いてから、確実に動き出す" }
+        ]
+      },
+      {
+        id: 3,
+        question: "仕事で自然と大切にしているのは？",
+        choices: [
+          { value: "A", label: "相手の気持ちや温度感" },
+          { value: "B", label: "目的や成果、ロジック" }
+        ]
+      },
+      {
+        id: 4,
+        question: "新しいアイデアが必要なとき、最初にすることは？",
+        choices: [
+          { value: "A", label: "誰かと話してヒントを探す" },
+          { value: "B", label: "情報を集めて、ひとりで深く考える" }
+        ]
+      },
+      {
+        id: 5,
+        question: "難しいプロジェクトに出会ったら？",
+        choices: [
+          { value: "A", label: "まず“最初の一歩”を踏み出す" },
+          { value: "B", label: "まず“全体の設計図”を描く" }
+        ]
+      },
+      {
+        id: 6,
+        question: "一番ストレスを感じるのは？",
+        choices: [
+          { value: "A", label: "細かい作業が延々と続くこと" },
+          { value: "B", label: "曖昧な指示で丸投げされること" }
+        ]
+      },
+      {
+        id: 7,
+        question: "あなたの強みに近いのは？",
+        choices: [
+          { value: "A", label: "人の本音を引き出すこと" },
+          { value: "B", label: "物事の構造を見抜くこと" }
+        ]
+      },
+      {
+        id: 8,
+        question: "仕事モードに入るスイッチは？",
+        choices: [
+          { value: "A", label: "会話・空気・雰囲気" },
+          { value: "B", label: "資料・数字・ロジック" }
+        ]
+      },
+      {
+        id: 9,
+        question: "あなたの心に刺さる言葉は？",
+        choices: [
+          { value: "A", label: "感情の奥に届く言葉" },
+          { value: "B", label: "本質を突くロジック" }
+        ]
+      },
+      {
+        id: 10,
+        question: "成果が生まれる瞬間は？",
+        choices: [
+          { value: "A", label: "「ここだ！」と思った瞬間、一気に形にするとき" },
+          { value: "B", label: "準備を積み重ねた結果が実を結ぶとき" }
+        ]
+      },
+      {
+        id: 11,
+        question: "あなたの集中スタイルは？",
+        choices: [
+          { value: "A", label: "短時間で一気に火がつく" },
+          { value: "B", label: "じっくり積み上げるほど強くなる" }
+        ]
+      },
+      {
+        id: 12,
+        question: "仕事で大切にしている軸は？",
+        choices: [
+          { value: "A", label: "誰を喜ばせたいか" },
+          { value: "B", label: "何を達成したいか" }
+        ]
+      },
+      {
+        id: 13,
+        question: "知らない人に選ばれるとき強いのは？",
+        choices: [
+          { value: "A", label: "発信の広がり（SNSなど）" },
+          { value: "B", label: "深い相談や口コミ" }
+        ]
+      },
+      {
+        id: 14,
+        question: "SNS発信で大事にするのは？",
+        choices: [
+          { value: "A", label: "勢い・世界観・直感" },
+          { value: "B", label: "価値・伝え方・設計" }
+        ]
+      },
+      {
+        id: 15,
+        question: "あなたが力を発揮できる場所は？",
+        choices: [
+          { value: "A", label: "リアル（対面の方が相手をつかめる）" },
+          { value: "B", label: "オンライン（こちらの方がやりやすい）" }
+        ]
+      },
+      {
+        id: 16,
+        question: "セールスの場面で強いのは？",
+        choices: [
+          { value: "A", label: "会話や対話で心をつかむ" },
+          { value: "B", label: "資料や説明で理解を深める" }
+        ]
+      },
+      {
+        id: 17,
+        question: "どちらの方が力を発揮しやすい？",
+        choices: [
+          { value: "A", label: "1対1の深い対話" },
+          { value: "B", label: "複数人の場の熱量" }
+        ]
+      },
+      {
+        id: 18,
+        question: "あなたの強みになりそうなのは？",
+        choices: [
+          { value: "A", label: "ネタ・企画の切れ味" },
+          { value: "B", label: "信頼を積み重ねること" }
+        ]
+      },
+      {
+        id: 19,
+        question: "新しい人と関わるときの第一歩は？",
+        choices: [
+          { value: "A", label: "まず空気や雰囲気をつくる" },
+          { value: "B", label: "まず課題を明確にする" }
+        ]
+      },
+      {
+        id: 20,
+        question: "あなたの集客が伸びる瞬間は？",
+        choices: [
+          { value: "A", label: "少数の人に深く刺さる発信をしたとき" },
+          { value: "B", label: "多くの人が共感するテーマを扱ったとき" }
+        ]
+      },
+      {
+        id: 21,
+        question: "あなたにとって理想の顧客は？",
+        choices: [
+          { value: "A", label: "あなたの温度や想いに共鳴する人" },
+          { value: "B", label: "あなたの知識や専門性に価値を感じる人" }
+        ]
+      },
+      {
+        id: 22,
+        question: "発信が止まりやすい理由は？",
+        choices: [
+          { value: "A", label: "発信を継続するのが苦手" },
+          { value: "B", label: "何を発信すればいいかわからない" }
+        ]
+      },
+      {
+        id: 23,
+        question: "うまくいかないときのパターンは？",
+        choices: [
+          { value: "A", label: "勢いで進みすぎて詰めが甘くなる" },
+          { value: "B", label: "考えすぎてタイミングを逃す" }
+        ]
+      },
+      {
+        id: 24,
+        question: "どちらが苦手？",
+        choices: [
+          { value: "A", label: "継続や習慣化" },
+          { value: "B", label: "柔軟な方向転換" }
+        ]
+      },
+      {
+        id: 25,
+        question: "メンタルが落ちる理由は？",
+        choices: [
+          { value: "A", label: "人間関係や温度差" },
+          { value: "B", label: "成果が見えないこと" }
+        ]
+      },
+      {
+        id: 26,
+        question: "周りから言われがちなことは？",
+        choices: [
+          { value: "A", label: "丁寧さが足りない" },
+          { value: "B", label: "丁寧すぎて遅い" }
+        ]
+      },
+      {
+        id: 27,
+        question: "一番苦手な作業は？",
+        choices: [
+          { value: "A", label: "事務・管理・数字" },
+          { value: "B", label: "人との対話・感情調整" }
+        ]
+      },
+      {
+        id: 28,
+        question: "気持ちの落ち方・戻り方は？",
+        choices: [
+          { value: "A", label: "急に落ちて、急に戻る" },
+          { value: "B", label: "じわじわ落ちて、じわじわ回復" }
+        ]
+      },
+      {
+        id: 29,
+        question: "仕事で避けたい環境は？",
+        choices: [
+          { value: "A", label: "細かく管理されること" },
+          { value: "B", label: "自由すぎる環境" }
+        ]
+      },
+      {
+        id: 30,
+        question: "リスクがある場面では？",
+        choices: [
+          { value: "A", label: "とりあえず動きたくなる" },
+          { value: "B", label: "慎重になりすぎる" }
+        ]
+      },
+      {
+        id: 31,
+        question: "あなたの“やらかし”傾向は？",
+        choices: [
+          { value: "A", label: "話しすぎる／開示しすぎる" },
+          { value: "B", label: "閉じすぎる／抱え込みすぎる" }
+        ]
+      },
+      {
+        id: 32,
+        question: "あなたがつまずきやすいのは？",
+        choices: [
+          { value: "A", label: "気持ちの波に振り回されること" },
+          { value: "B", label: "考えすぎて動きが止まること" }
+        ]
+      }
+    ];
+
     let cur = 0;
+    const answers = [];
+
     function start() {
-      if(!document.getElementById('name').value) return alert("お名前を入力してください");
-      document.getElementById('screen-top').classList.add('hidden');
-      document.getElementById('screen-q').classList.remove('hidden');
+      const name = document.getElementById("name").value.trim();
+      const by = document.getElementById("by").value.trim();
+      const bm = document.getElementById("bm").value.trim();
+      const bd = document.getElementById("bd").value.trim();
+
+      if (!name) {
+        alert("お名前を入力してください");
+        return;
+      }
+      if (!by || !bm || !bd) {
+        alert("生年月日を入力してください");
+        return;
+      }
+
+      document.getElementById("screen-top").classList.add("hidden");
+      document.getElementById("screen-q").classList.remove("hidden");
       render();
     }
+
     function render() {
-      document.getElementById('q-content').innerHTML = `
-        <h2>${cur + 1}. ${QUESTIONS[cur]}</h2>
-        <button class="btn" onclick="next()">かなりそう思う</button>
-        <button class="btn" style="background:#f0f0f0; color:#333;" onclick="next()">そこまでではない</button>
+      const q = QUESTIONS[cur];
+      const progress = ((cur) / QUESTIONS.length) * 100;
+      document.getElementById("progress-bar").style.width = progress + "%";
+
+      document.getElementById("q-content").innerHTML = `
+        <div class="q-top">質問 ${cur + 1} / ${QUESTIONS.length}</div>
+        <h2>${q.question}</h2>
+        <button class="btn" onclick="answer('A')">${q.choices[0].label}</button>
+        <button class="btn btn-sub" onclick="answer('B')">${q.choices[1].label}</button>
       `;
     }
-    function next() {
+
+    function answer(value) {
+      answers.push({
+        questionId: QUESTIONS[cur].id,
+        answer: value
+      });
+
       cur++;
-      if(cur < QUESTIONS.length) render();
-      else document.getElementById('q-content').innerHTML = "<h2>診断完了</h2><button class='btn' onclick='window.print()'>結果をPDFで保存する</button>";
+
+      if (cur < QUESTIONS.length) {
+        render();
+      } else {
+        finish();
+      }
+    }
+
+    function finish() {
+      document.getElementById("screen-q").classList.add("hidden");
+      document.getElementById("screen-end").classList.remove("hidden");
+      console.log("回答結果", answers);
     }
   </script>
 </body>
