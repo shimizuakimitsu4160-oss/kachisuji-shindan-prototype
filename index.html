@@ -12,23 +12,27 @@
       justify-content: center;
       padding: 50px 20px;
       margin: 0;
+      color: #222;
     }
+
     .card {
       background: #fff;
       border-radius: 24px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
       padding: 32px 24px;
       width: 100%;
-      max-width: 520px;
+      max-width: 720px;
       box-sizing: border-box;
     }
+
     h1 {
       text-align: center;
-      font-size: 28px;
+      font-size: 30px;
       margin-bottom: 12px;
       font-weight: 800;
       line-height: 1.4;
     }
+
     .lead {
       text-align: center;
       font-size: 14px;
@@ -37,12 +41,15 @@
       margin-bottom: 24px;
       white-space: pre-line;
     }
+
     .section-title {
       font-size: 16px;
       font-weight: bold;
       margin-bottom: 12px;
       text-align: center;
+      line-height: 1.7;
     }
+
     label {
       font-weight: bold;
       font-size: 14px;
@@ -51,6 +58,7 @@
       margin-bottom: 8px;
       margin-top: 12px;
     }
+
     input {
       width: 100%;
       padding: 12px;
@@ -60,16 +68,19 @@
       margin-bottom: 12px;
       font-size: 16px;
     }
+
     .birth-group {
       display: flex;
       gap: 8px;
       align-items: center;
       margin-bottom: 16px;
     }
+
     .birth-group input {
       margin-bottom: 0;
       text-align: center;
     }
+
     .btn {
       width: 100%;
       padding: 16px;
@@ -81,26 +92,32 @@
       cursor: pointer;
       margin-top: 12px;
       font-size: 15px;
+      line-height: 1.6;
     }
+
     .btn-sub {
       background: #f0f0f0;
       color: #333;
     }
+
     .hidden {
       display: none;
     }
+
     h2 {
-      font-size: 20px;
+      font-size: 22px;
       text-align: center;
       margin-bottom: 16px;
-      line-height: 1.6;
+      line-height: 1.7;
     }
+
     .q-top {
       text-align: center;
       font-size: 13px;
       color: #777;
       margin-bottom: 8px;
     }
+
     .progress {
       height: 8px;
       background: #eee;
@@ -108,12 +125,14 @@
       overflow: hidden;
       margin-bottom: 24px;
     }
+
     .progress-bar {
       height: 100%;
       background: #111;
       width: 0%;
       transition: width 0.3s ease;
     }
+
     .note {
       font-size: 12px;
       color: #777;
@@ -121,27 +140,82 @@
       margin-top: 6px;
       line-height: 1.6;
     }
+
+    .result-label {
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .result-title {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .result-catch {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.8;
+      margin-bottom: 28px;
+    }
+
+    .result-section {
+      margin-top: 28px;
+    }
+
+    .result-section h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .result-body {
+      font-size: 15px;
+      line-height: 2;
+      color: #333;
+      white-space: pre-line;
+    }
+
+    .result-list {
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    .result-list li {
+      margin-bottom: 10px;
+      line-height: 1.8;
+    }
+
+    .result-item-title {
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
   <div class="card" id="screen-top">
     <h1>ひとりビジネス<br>勝ち筋診断</h1>
-    <div class="lead">
-統計学×心理学×ブランド戦略で
-選ばれつづける勝ち筋へ導く！
-    </div>
+
+    <div class="lead">統計学×心理学×ブランド戦略で
+選ばれつづける勝ち筋へ導く！</div>
 
     <div class="section-title">あなたの“仕事の勝ち筋”を見つける32の質問</div>
 
     <label>お名前</label>
-    <input type="text" id="name" placeholder="お名前を入力">
+    <input type="text" id="name" placeholder="お名前を入力" />
 
     <label>生年月日</label>
     <div class="birth-group">
-      <input type="number" id="by" placeholder="1977">年
-      <input type="number" id="bm" placeholder="03">月
-      <input type="number" id="bd" placeholder="13">日
+      <input type="number" id="by" placeholder="1977" />年
+      <input type="number" id="bm" placeholder="03" />月
+      <input type="number" id="bd" placeholder="13" />日
     </div>
+
     <div class="note">※ 生年月日は仕事の勝ち観タイプ判定に使用します</div>
 
     <button class="btn" onclick="start()">診断をはじめる</button>
@@ -154,10 +228,8 @@
     <div id="q-content"></div>
   </div>
 
-  <div class="card hidden" id="screen-end">
-    <h2>32問の回答が完了しました</h2>
-    <div class="lead">次は結果ページの実装に進みます。</div>
-    <button class="btn" onclick="window.scrollTo(0,0)">上へ戻る</button>
+  <div class="card hidden" id="screen-result">
+    <div id="result-content"></div>
   </div>
 
   <script>
@@ -433,6 +505,7 @@
         alert("お名前を入力してください");
         return;
       }
+
       if (!by || !bm || !bd) {
         alert("生年月日を入力してください");
         return;
@@ -445,7 +518,7 @@
 
     function render() {
       const q = QUESTIONS[cur];
-      const progress = ((cur) / QUESTIONS.length) * 100;
+      const progress = (cur / QUESTIONS.length) * 100;
       document.getElementById("progress-bar").style.width = progress + "%";
 
       document.getElementById("q-content").innerHTML = `
@@ -473,8 +546,76 @@
 
     function finish() {
       document.getElementById("screen-q").classList.add("hidden");
-      document.getElementById("screen-end").classList.remove("hidden");
+      document.getElementById("screen-result").classList.remove("hidden");
+      showFirstResult();
       console.log("回答結果", answers);
+    }
+
+    function showFirstResult() {
+      const resultHtml = `
+        <div class="result-label">あなたの仕事の勝ち観は</div>
+        <div class="result-title">導く太陽（陽）</div>
+        <div class="result-catch">自分の信念と在り方で、人・企業・社会に“光”を届けたい。</div>
+
+        <div class="result-section">
+          <h3>あなたが、もっとも大切にしている「勝ち観」は？</h3>
+          <div class="result-body">“自分の信念と在り方そのもので、周りに光を届けたい”という価値観です。
+
+あなたは、強さよりも温かさ、押しつけよりも希望を大切にし、
+「自分がどう生きるか」が最大のメッセージになると信じています。
+
+誰かを変えようとするのではなく、
+あなたが誠実に進む姿勢そのものが周りを照らし、
+自然と人が動き始めます。
+
+あなたにとって仕事とは、
+成果を出す手段ではなく、
+「自分の信じる道を貫きながら、誰かの未来に明るさを灯すこと」。
+
+その在り方に共鳴した人が前へ進み、
+新しい選択や覚悟を持つ瞬間に、深い喜びを感じます。
+
+完璧である必要はなく、
+弱さも迷いもそのまま光の一部になります。
+
+あなたがあなたらしく立っているだけで、
+周りの空気がほぐれ、希望の方向へ動いていきます。
+
+導く太陽の勝ち観は、
+存在そのものが“道標”になること。
+
+あなたの光は、誰かの勇気の始まりです。</div>
+        </div>
+
+        <div class="result-section">
+          <h3>持ちやすい勝ち観</h3>
+          <div class="result-body">元気でいたい／前に進みたい／空気を明るくしたい／希望を見たい／導きたい／信念を貫きたい／存在価値で照らしたい／優しさで包みたい／未来を信じたい／良い流れをつくりたい</div>
+        </div>
+
+        <div class="result-section">
+          <h3>大切にするべき勝ち観 Top5</h3>
+          <ol class="result-list">
+            <li><span class="result-item-title">信念を貫いて生きたい</span><br>自分の在り方こそが大事で、人を導く力になると知っている。</li>
+            <li><span class="result-item-title">未来を明るく照らしたい</span><br>言葉よりも姿勢で、希望の方向を示したい価値観。</li>
+            <li><span class="result-item-title">存在そのもので人に影響を与えたい</span><br>振る舞いや佇まいが周りを前向きにする。</li>
+            <li><span class="result-item-title">本音で向き合いたい</span><br>嘘のないスタンスが、人の心を動かすと感じている。</li>
+            <li><span class="result-item-title">弱さも光に変えたい</span><br>完璧より“人間らしさ”が魅力と信じている。</li>
+          </ol>
+        </div>
+
+        <div class="result-section">
+          <h3>捨てるべき価値観 Top5</h3>
+          <ol class="result-list">
+            <li><span class="result-item-title">みんなに好かれなければいけない</span><br>迎合すると魅力が消える。信念の方が重要。</li>
+            <li><span class="result-item-title">弱さを隠さなければいけない</span><br>太陽の弱さはむしろ光になる。</li>
+            <li><span class="result-item-title">結果だけを求めなければいけない</span><br>在り方こそがあなたの価値。</li>
+            <li><span class="result-item-title">急いで成果を出さなければいけない</span><br>太陽の光はゆっくり効く。焦りは逆効果。</li>
+            <li><span class="result-item-title">人を全部救わなければいけない</span><br>あなたは“照らす存在”。背負う必要はない。</li>
+          </ol>
+        </div>
+      `;
+
+      document.getElementById("result-content").innerHTML = resultHtml;
     }
   </script>
 </body>
