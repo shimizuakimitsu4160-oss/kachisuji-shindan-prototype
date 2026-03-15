@@ -2,60 +2,19 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>ひとりビジネス勝ち筋診断</title>
+  <title>旅のお土産ツボ診断</title>
   <style>
-    body { background: #f8f9fa; font-family: "Helvetica Neue", Arial, sans-serif; display: flex; justify-content: center; padding: 50px 20px; }
-    .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 40px; width: 100%; max-width: 500px; }
-    h1 { text-align: center; font-size: 24px; margin-bottom: 30px; font-weight: 800; }
-    label { font-weight: bold; font-size: 14px; color: #555; }
-    input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 12px; margin: 8px 0 20px 0; box-sizing: border-box; }
-    .birth-row { display: flex; gap: 10px; }
-    .birth-row input { flex: 1; text-align: center; }
-    .btn { width: 100%; padding: 16px; background: #111; color: #fff; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-    .btn:hover { background: #333; }
-    .hidden { display: none; }
-    h2 { font-size: 20px; text-align: center; margin-bottom: 30px; }
+    body { background: #f8f9fa; font-family: sans-serif; display: flex; justify-content: center; padding: 50px 20px; }
+    .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 40px; width: 100%; max-width: 400px; text-align: center; }
+    h1 { font-size: 22px; margin-bottom: 30px; }
+    .btn { width: 100%; padding: 16px; background: #111; color: #fff; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px; }
   </style>
 </head>
 <body>
-  <div class="card" id="screen-top">
-    <h1>ひとりビジネス<br>勝ち筋診断</h1>
-    <label>お名前</label>
-    <input type="text" id="name" placeholder="お名前を入力">
-    <label>生年月日</label>
-    <div class="birth-row">
-      <input type="number" id="by" placeholder="1977">年
-      <input type="number" id="bm" placeholder="03">月
-      <input type="number" id="bd" placeholder="13">日
-    </div>
-    <button class="btn" onclick="start()">診断をはじめる</button>
+  <div class="card">
+    <h1>診断をしますか？</h1>
+    <button class="btn" onclick="location.href='https://shimizuakimitsu4160-oss.github.io/kachisuji-shindan-prototype/'">A：はい</button>
+    <button class="btn" style="background:#666" onclick="alert('またの機会にお待ちしています！')">B：いいえ</button>
   </div>
-
-  <div class="card hidden" id="screen-q">
-    <div id="q-content"></div>
-  </div>
-
-  <script>
-    const QUESTIONS = ["アイデアを出すときは、まだ世の中にない価値を考えるのが好きだ", "ひとりで考える時間があると、仕事の質が上がりやすい"]; 
-    let cur = 0;
-    function start() {
-      if(!document.getElementById('name').value) return alert("お名前を入力してください");
-      document.getElementById('screen-top').classList.add('hidden');
-      document.getElementById('screen-q').classList.remove('hidden');
-      render();
-    }
-    function render() {
-      document.getElementById('q-content').innerHTML = `
-        <h2>${cur + 1}. ${QUESTIONS[cur]}</h2>
-        <button class="btn" onclick="next()">かなりそう思う</button>
-        <button class="btn" style="background:#f0f0f0; color:#333; margin-top:10px;" onclick="next()">そこまでではない</button>
-      `;
-    }
-    function next() {
-      cur++;
-      if(cur < QUESTIONS.length) render();
-      else document.getElementById('q-content').innerHTML = "<h2>診断完了</h2><button class='btn' onclick='window.print()'>結果をPDFで保存する</button>";
-    }
-  </script>
 </body>
 </html>
