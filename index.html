@@ -216,6 +216,7 @@
       padding: 18px;
       line-height: 1.9;
       font-size: 15px;
+      white-space: pre-line;
     }
 
     .score-box {
@@ -226,13 +227,7 @@
       margin-top: 12px;
       line-height: 1.9;
       font-size: 15px;
-    }
-
-    .divider-note {
-      text-align: center;
-      color: #777;
-      font-size: 13px;
-      margin: 12px 0 0;
+      white-space: pre-line;
     }
 
     .pdf-area {
@@ -566,31 +561,8 @@
       }
     ];
 
-       let cur = 0;
+    let cur = 0;
     const answers = [];
-
-    const VALUE_TYPE_ORDER = [
-      "taiyo_yo",
-      "taiyo_in",
-      "inazuma_yo",
-      "inazuma_in",
-      "takayama_yo",
-      "takayama_in",
-      "tomoshibi_yo",
-      "tomoshibi_in",
-      "mangetsu_yo",
-      "mangetsu_in",
-      "daichi_yo",
-      "daichi_in",
-      "shinkai_yo",
-      "shinkai_in",
-      "ganban_yo",
-      "ganban_in",
-      "ryuseigun_yo",
-      "ryuseigun_in",
-      "senpu_yo",
-      "senpu_in"
-    ];
 
     const VALUE_TYPE_DATA = {
       taiyo_yo: {
@@ -639,8 +611,8 @@
       },
 
       taiyo_in: createPlaceholderValueType("導く太陽（陰）"),
-      inazuma_yo: createPlaceholderValueType("稲妻（陽）"),
-      inazuma_in: createPlaceholderValueType("稲妻（陰）"),
+      inazuma_yo: createPlaceholderValueType("稲妻インパクト（陽）"),
+      inazuma_in: createPlaceholderValueType("稲妻インパクト（陰）"),
       takayama_yo: createPlaceholderValueType("高山の頂（陽）"),
       takayama_in: createPlaceholderValueType("高山の頂（陰）"),
       tomoshibi_yo: createPlaceholderValueType("心に灯し火（陽）"),
@@ -666,20 +638,175 @@
         mainTitle: "あなたが、もっとも大切にしている「勝ち観」は？",
         mainBody: `現在、このタイプはタイトル切り替え確認用の仮表示です。
 
-正式本文は、すでに受け取っているZIPデータをもとに次の差し替えで反映します。`,
+正式本文は、すでに送ってもらっているデータを次の差し替えで反映します。`,
         naturalValues: "正式反映前",
         keepValues: `<li><span class="result-item-title">正式データ反映予定</span><br>次の差し替えでこのタイプ固有の内容に変わります。</li>`,
         releaseValues: `<li><span class="result-item-title">正式データ反映予定</span><br>次の差し替えでこのタイプ固有の内容に変わります。</li>`
       };
     }
 
-    function getValueTypeKey() {
+    const STEMS = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+
+    const STEM_META = {
+      "甲": { element: "wood",  polarity: "yang" },
+      "乙": { element: "wood",  polarity: "yin"  },
+      "丙": { element: "fire",  polarity: "yang" },
+      "丁": { element: "fire",  polarity: "yin"  },
+      "戊": { element: "earth", polarity: "yang" },
+      "己": { element: "earth", polarity: "yin"  },
+      "庚": { element: "metal", polarity: "yang" },
+      "辛": { element: "metal", polarity: "yin"  },
+      "壬": { element: "water", polarity: "yang" },
+      "癸": { element: "water", polarity: "yin"  }
+    };
+
+    const DAY_STEM_TO_BASE_KEY = {
+      "甲": "ganban",
+      "乙": "mangetsu",
+      "丙": "taiyo",
+      "丁": "tomoshibi",
+      "戊": "takayama",
+      "己": "daichi",
+      "庚": "inazuma",
+      "辛": "shinkai",
+      "壬": "senpu",
+      "癸": "ryuseigun"
+    };
+
+    const YANG_GODS = ["比肩", "劫財", "食神", "傷官", "偏財", "偏官"];
+
+    function buildUtcDateFromInput() {
       const y = parseInt(document.getElementById("by").value || "0", 10);
       const m = parseInt(document.getElementById("bm").value || "0", 10);
       const d = parseInt(document.getElementById("bd").value || "0", 10);
-      const seed = y + m + d;
-      const index = ((seed % VALUE_TYPE_ORDER.length) + VALUE_TYPE_ORDER.length) % VALUE_TYPE_ORDER.length;
-      return VALUE_TYPE_ORDER[index];
+      return new Date(Date.UTC(y, m - 1, d));
+    }
+
+    function getYearStemIndex(date) {
+      let year = date.getUTCFullYear();
+      const month = date.getUTCMonth() + 1;
+      const day = date.getUTCDate();
+
+      if (month < 2 || (month === 2 && day < 4)) {
+        year -= 1;
+      }
+
+      return ((year - 4) % 10 + 10) % 10;
+    }
+
+    function getSolarMonthOrder(date) {
+      const month = date.getUTCMonth() + 1;
+      const day = date.getUTCDate();
+      const md = month * 100 + day;
+
+      if (md >= 204 && md < 306) return 0;
+      if (md >= 306 && md < 405) return 1;
+      if (md >= 405 && md < 506) return 2;
+      if (md >= 506 && md < 606) return 3;
+      if (md >= 606 && md < 707) return 4;
+      if (md >= 707 && md < 808) return 5;
+      if (md >= 808 && md < 908) return 6;
+      if (md >= 908 && md < 1008) return 7;
+      if (md >= 1008 && md < 1107) return 8;
+      if (md >= 1107 && md < 1207) return 9;
+      if (md >= 1207 || md < 106) return 10;
+      return 11;
+    }
+
+    function getMonthStemIndex(yearStemIndex, monthOrder) {
+      let startStemIndex = 0;
+
+      if (yearStemIndex === 0 || yearStemIndex === 5) startStemIndex = 2;
+      else if (yearStemIndex === 1 || yearStemIndex === 6) startStemIndex = 4;
+      else if (yearStemIndex === 2 || yearStemIndex === 7) startStemIndex = 6;
+      else if (yearStemIndex === 3 || yearStemIndex === 8) startStemIndex = 8;
+      else startStemIndex = 0;
+
+      return (startStemIndex + monthOrder) % 10;
+    }
+
+    function getDayStemIndex(date) {
+      const base = Date.UTC(1984, 1, 2);
+      const current = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+      const diffDays = Math.floor((current - base) / 86400000);
+      return ((diffDays % 10) + 10) % 10;
+    }
+
+    function generateElement(el) {
+      return {
+        wood: "fire",
+        fire: "earth",
+        earth: "metal",
+        metal: "water",
+        water: "wood"
+      }[el];
+    }
+
+    function controlElement(el) {
+      return {
+        wood: "earth",
+        earth: "water",
+        water: "fire",
+        fire: "metal",
+        metal: "wood"
+      }[el];
+    }
+
+    function getTenGod(dayStem, monthStem) {
+      const dm = STEM_META[dayStem];
+      const ms = STEM_META[monthStem];
+      const samePolarity = dm.polarity === ms.polarity;
+
+      if (dm.element === ms.element) {
+        return samePolarity ? "比肩" : "劫財";
+      }
+
+      if (generateElement(dm.element) === ms.element) {
+        return samePolarity ? "食神" : "傷官";
+      }
+
+      if (controlElement(dm.element) === ms.element) {
+        return samePolarity ? "偏財" : "正財";
+      }
+
+      if (controlElement(ms.element) === dm.element) {
+        return samePolarity ? "偏官" : "正官";
+      }
+
+      if (generateElement(ms.element) === dm.element) {
+        return samePolarity ? "偏印" : "印綬";
+      }
+
+      return "比肩";
+    }
+
+    function getFormalValueTypeInfo() {
+      const date = buildUtcDateFromInput();
+
+      const dayStemIndex = getDayStemIndex(date);
+      const dayStem = STEMS[dayStemIndex];
+
+      const yearStemIndex = getYearStemIndex(date);
+      const monthOrder = getSolarMonthOrder(date);
+      const monthStemIndex = getMonthStemIndex(yearStemIndex, monthOrder);
+      const monthStem = STEMS[monthStemIndex];
+
+      const tenGod = getTenGod(dayStem, monthStem);
+      const polarityKey = YANG_GODS.includes(tenGod) ? "yo" : "in";
+      const baseKey = DAY_STEM_TO_BASE_KEY[dayStem];
+      const fullKey = `${baseKey}_${polarityKey}`;
+
+      return {
+        fullKey,
+        dayStem,
+        monthStem,
+        tenGod,
+        polarityKey
+      };
+    }
+
+    function getValueTypeKey() {
+      return getFormalValueTypeInfo().fullKey;
     }
 
     function getValueTypeData() {
@@ -740,8 +867,6 @@
       document.getElementById("screen-q").classList.add("hidden");
       document.getElementById("screen-result").classList.remove("hidden");
       showFullResult();
-      console.log("回答結果", answers);
-      console.log("仕事の勝ち観キー", getValueTypeKey());
     }
 
     function showFullResult() {
