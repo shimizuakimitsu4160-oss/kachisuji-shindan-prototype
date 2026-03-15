@@ -1,1009 +1,871 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ひとりビジネス勝ち筋診断</title>
-  <style>
-    body {
-      background: #f8f9fa;
-      font-family: sans-serif;
-      display: flex;
-      justify-content: center;
-      padding: 50px 20px;
-      margin: 0;
-      color: #222;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      padding: 32px 24px;
-      width: 100%;
-      max-width: 760px;
-      box-sizing: border-box;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 30px;
-      margin-bottom: 12px;
-      font-weight: 800;
-      line-height: 1.4;
-    }
-
-    .lead {
-      text-align: center;
-      font-size: 14px;
-      color: #666;
-      line-height: 1.8;
-      margin-bottom: 24px;
-      white-space: pre-line;
-    }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 12px;
-      text-align: center;
-      line-height: 1.7;
-    }
-
-    label {
-      font-weight: bold;
-      font-size: 14px;
-      color: #555;
-      display: block;
-      margin-bottom: 8px;
-      margin-top: 12px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      box-sizing: border-box;
-      margin-bottom: 12px;
-      font-size: 16px;
-    }
-
-    .birth-group {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .birth-group input {
-      margin-bottom: 0;
-      text-align: center;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 16px;
-      background: #111;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 12px;
-      font-size: 15px;
-      line-height: 1.6;
-    }
-
-    .btn-sub {
-      background: #f0f0f0;
-      color: #333;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    h2 {
-      font-size: 22px;
-      text-align: center;
-      margin-bottom: 16px;
-      line-height: 1.7;
-    }
-
-    .q-top {
-      text-align: center;
-      font-size: 13px;
-      color: #777;
-      margin-bottom: 8px;
-    }
-
-    .progress {
-      height: 8px;
-      background: #eee;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 24px;
-    }
-
-    .progress-bar {
-      height: 100%;
-      background: #111;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    .note {
-      font-size: 12px;
-      color: #777;
-      text-align: center;
-      margin-top: 6px;
-      line-height: 1.6;
-    }
-
-    .result-page {
-      margin-bottom: 44px;
-      padding-bottom: 28px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .result-page:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .page-kicker {
-      text-align: center;
-      font-size: 13px;
-      color: #777;
-      font-weight: bold;
-      margin-bottom: 8px;
-      letter-spacing: 0.03em;
-    }
-
-    .page-title {
-      text-align: center;
-      font-size: 32px;
-      font-weight: 800;
-      margin-bottom: 16px;
-      line-height: 1.4;
-    }
-
-    .page-catch {
-      text-align: center;
-      font-size: 18px;
-      font-weight: 700;
-      line-height: 1.8;
-      margin-bottom: 28px;
-    }
-
-    .result-section {
-      margin-top: 28px;
-    }
-
-    .result-section h3 {
-      font-size: 18px;
-      margin-bottom: 12px;
-      line-height: 1.6;
-    }
-
-    .result-body {
-      font-size: 15px;
-      line-height: 2;
-      color: #333;
-      white-space: pre-line;
-    }
-
-    .result-list {
-      padding-left: 20px;
-      margin: 0;
-    }
-
-    .result-list li {
-      margin-bottom: 12px;
-      line-height: 1.8;
-    }
-
-    .result-item-title {
-      font-weight: 700;
-    }
-
-    .tag-box {
-      background: #fafafa;
-      border: 1px solid #eee;
-      border-radius: 16px;
-      padding: 18px;
-      line-height: 1.9;
-      font-size: 15px;
-      white-space: pre-line;
-    }
-
-    .score-box {
-      background: #fafafa;
-      border: 1px solid #eee;
-      border-radius: 16px;
-      padding: 18px;
-      margin-top: 12px;
-      line-height: 1.9;
-      font-size: 15px;
-      white-space: pre-line;
-    }
-
-    .pdf-area {
-      margin-top: 36px;
-    }
-
-    @media print {
-      body {
-        background: #fff;
-        padding: 0;
-      }
-
-      .card {
-        box-shadow: none;
-        border-radius: 0;
-        max-width: 100%;
-        padding: 0;
-      }
-
-      #screen-top,
-      #screen-q,
-      .pdf-area {
-        display: none !important;
-      }
-
-      #screen-result {
-        display: block !important;
-      }
-
-      .result-page {
-        page-break-inside: avoid;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ひとりビジネス勝ち筋診断</title>
+<style>
+  :root{
+    --bg:#f7f8fb;
+    --card:#ffffff;
+    --ink:#1e2430;
+    --sub:#5d6778;
+    --line:#dfe5ef;
+    --accent:#2f6feb;
+    --accent-soft:#eaf1ff;
+    --danger:#b42318;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Hiragino Sans","Yu Gothic","Meiryo",system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+  .app{max-width:960px;margin:0 auto;padding:24px}
+  .screen{display:none}
+  .screen.active{display:block}
+  .hero,.card,.page{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(29,39,61,.06);
+  }
+  .hero{padding:40px 32px}
+  .hero h1{font-size:36px;line-height:1.25;margin:0 0 8px}
+  .hero p{font-size:16px;line-height:1.9;color:var(--sub);margin:0}
+  .badge{display:inline-block;padding:8px 14px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-bottom:16px}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+  button{
+    appearance:none;border:none;border-radius:14px;padding:14px 18px;
+    font-size:15px;font-weight:700;cursor:pointer
+  }
+  .primary{background:var(--accent);color:#fff}
+  .secondary{background:#eef2f8;color:var(--ink)}
+  .ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .card{padding:24px}
+  .card h2{margin:0 0 8px;font-size:26px}
+  .help{color:var(--sub);line-height:1.8}
+  .field{margin-top:18px}
+  label{display:block;font-weight:700;margin-bottom:8px}
+  input[type="text"]{
+    width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:16px
+  }
+  .birth-split{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+  .birth-split input{text-align:center;min-width:0}
+  .birth-split input#birthYear{flex:1.6}
+  .birth-split input#birthMonth,.birth-split input#birthDay{flex:1}
+  .birth-split span{font-weight:700;color:var(--sub);white-space:nowrap}
+  .error{color:var(--danger);margin-top:12px;font-weight:700;display:none}
+.progress{display:grid;grid-template-columns:repeat(32,1fr);gap:4px;margin:0 0 18px}
+  .progress span{height:6px;flex:none;border-radius:999px;background:#e7ecf4}
+  .progress span.on{background:var(--accent)}
+  .single-question{display:grid;grid-template-columns:1fr;gap:14px}
+  .choice-label{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:800;margin-bottom:8px}
+  .opt small{display:block;font-size:15px;line-height:1.8}
+  .question{padding:22px;border:1px solid var(--line);border-radius:18px;background:#fff;margin-bottom:16px}
+  .qno{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px}
+  .qtext{font-size:19px;font-weight:800;line-height:1.6;margin-bottom:16px}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .opt{
+    border:1px solid var(--line);background:#fff;border-radius:16px;padding:16px;
+    text-align:left;min-height:96px;font-weight:700;color:var(--ink)
+  }
+  .opt small{display:block;color:var(--sub);font-weight:500;line-height:1.7;margin-top:6px}
+  .opt.selected{border:2px solid var(--accent);background:var(--accent-soft)}
+  .nav{display:flex;justify-content:space-between;gap:12px;margin-top:18px}
+  .summary{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+  .chip{display:inline-block;padding:8px 12px;border-radius:999px;background:#f2f5fa;font-weight:700;margin:4px 6px 0 0}
+  .results-wrap{display:none}
+  .results-wrap.active{display:block}
+  .toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .page{
+    width:100%;min-height:257mm;padding:18mm 14mm;margin:0 auto 16px;
+    position:relative;overflow:hidden
+  }
+  .page h2{font-size:30px;line-height:1.35;margin:0 0 10px}
+  .page h3{font-size:22px;line-height:1.5;margin:28px 0 12px}
+  .lead{font-size:18px;line-height:1.9;color:#334155}
+  .section{margin-top:18px}
+  .section p,.section li{line-height:1.95;font-size:16px}
+  .box{
+    padding:16px;border:1px solid var(--line);border-radius:16px;background:#fbfcff;margin-top:14px
+  }
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .meta .chip{background:var(--accent-soft);color:var(--accent)}
+  .page-number{position:absolute;bottom:10mm;right:14mm;color:#7a8597;font-size:12px}
+  canvas{width:100%;max-width:480px;height:auto;display:block;margin:8px auto}
+  .note{font-size:13px;color:#667085}
+  .cover-kicker{font-size:14px;letter-spacing:.06em;color:var(--accent);font-weight:800}
+  .cover-title{font-size:42px;line-height:1.25;margin:8px 0 14px}
+  .cover-sub{font-size:18px;line-height:1.9;color:#4b5565}
+  .cover-panel{margin-top:24px;padding:18px;border-radius:18px;background:linear-gradient(135deg,#eef4ff,#f8fbff);border:1px solid #d8e4ff}
+  .type-hero{font-size:54px;line-height:1.15;font-weight:800;color:#111827;margin:8px 0 10px;letter-spacing:.01em}
+  .type-line{font-size:24px;line-height:1.7;color:#1e293b;margin:0 0 18px}
+  @media (max-width: 640px){.type-hero{font-size:40px}.type-line{font-size:20px}}
+  .tiny{font-size:12px;color:#667085}
+  @media (max-width: 780px){
+    .app{padding:16px}
+    .hero{padding:28px 20px}
+    .hero h1{font-size:28px}
+    .options,.summary,.grid2{grid-template-columns:1fr}
+    .page{padding:14mm 8mm;min-height:auto}
+    .page h2{font-size:24px}
+  }
+  @media print{
+    body{background:#fff}
+    .app{max-width:none;padding:0}
+    .screen:not(.printable), .toolbar{display:none !important}
+    .results-wrap{display:block !important}
+    .page{border:none;border-radius:0;box-shadow:none;margin:0;page-break-after:always}
+    .page:last-child{page-break-after:auto}
+  }
+</style>
 </head>
 <body>
-  <div class="card" id="screen-top">
-    <h1>ひとりビジネス<br>勝ち筋診断</h1>
-
-    <div class="lead">統計学×心理学×ブランド戦略で
-選ばれつづける勝ち筋へ導く！</div>
-
-    <div class="section-title">あなたの“仕事の勝ち筋”を見つける32の質問</div>
-
-    <label>お名前</label>
-    <input type="text" id="name" placeholder="お名前を入力" />
-
-    <label>生年月日</label>
-    <div class="birth-group">
-      <input type="number" id="by" placeholder="1977" />年
-      <input type="number" id="bm" placeholder="03" />月
-      <input type="number" id="bd" placeholder="13" />日
+<div class="app">
+  <section id="intro" class="screen active">
+    <div class="hero">
+      <div class="badge">統計学 × 心理学 × ブランド戦略</div>
+      <h1>ひとりビジネス勝ち筋診断</h1>
+      <p>生年月日と32問の直感回答から、あなたの仕事の勝ち観タイプ、働きかたの勝ち筋、勝ち筋顧客、集客の勝ち筋、勝ち筋パートナー、負け筋までをまとめて可視化します。</p>
+      <div class="actions">
+        <button class="primary" id="startBtn">診断をはじめる</button>
+      </div>
     </div>
+  </section>
 
-    <div class="note">※ 生年月日は仕事の勝ち観タイプ判定に使用します</div>
-
-    <button class="btn" onclick="start()">診断をはじめる</button>
-  </div>
-
-  <div class="card hidden" id="screen-q">
-    <div class="progress">
-      <div class="progress-bar" id="progress-bar"></div>
+  <section id="birth" class="screen">
+    <div class="card">
+      <h2>お名前と生年月日を入力してください</h2>
+      <p class="help">お名前は結果PDFの表紙に反映されます。生年月日は四柱推命ベースの「仕事の勝ち観タイプ」判定に使用します。出生時間は不要です。</p>
+      <div class="field">
+        <label for="userName">お名前</label>
+        <input type="text" id="userName" placeholder="お名前を入力" />
+      </div>
+      <div class="field">
+        <label>生年月日</label>
+        <div class="birth-split">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" id="birthYear" placeholder="1977" aria-label="年" />
+          <span>年</span>
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" id="birthMonth" placeholder="03" aria-label="月" />
+          <span>月</span>
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" id="birthDay" placeholder="13" aria-label="日" />
+          <span>日</span>
+        </div>
+      </div>
+      <div id="birthError" class="error">お名前と生年月日を正しく入力してください。</div>
+      <div class="actions">
+        <button class="secondary" data-goto="intro">戻る</button>
+        <button class="primary" id="toQuestionsBtn">質問へ進む</button>
+      </div>
     </div>
-    <div id="q-content"></div>
-  </div>
+  </section>
 
-  <div class="card hidden" id="screen-result">
-    <div id="result-content"></div>
-    <div class="pdf-area">
-      <button class="btn" onclick="window.print()">結果をPDFで保存する</button>
+  <section id="questions" class="screen printable">
+    <div class="card">
+      <div class="progress" id="progressBar"></div>
+      <h2 id="pageTitle">質問</h2>
+      <p class="help">A / B のどちらかを選んでください。全32問です。</p>
+      <div id="questionList"></div>
+      <div class="nav">
+        <button class="secondary" id="prevPageBtn">前へ</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <script>
-    const QUESTIONS = [
-      {
-        id: 1,
-        question: "ひらめきが生まれる瞬間はどちらが多い？",
-        choices: [
-          { value: "A", label: "人との会話の中で、突然アイデアが降りてくる" },
-          { value: "B", label: "ひとりで整理していると、自然と形になってくる" }
-        ]
-      },
-      {
-        id: 2,
-        question: "仕事をスタートするときのあなたは？",
-        choices: [
-          { value: "A", label: "まず動いてみる。道は走りながら整える" },
-          { value: "B", label: "全体像を描いてから、確実に動き出す" }
-        ]
-      },
-      {
-        id: 3,
-        question: "仕事で自然と大切にしているのは？",
-        choices: [
-          { value: "A", label: "相手の気持ちや温度感" },
-          { value: "B", label: "目的や成果、ロジック" }
-        ]
-      },
-      {
-        id: 4,
-        question: "新しいアイデアが必要なとき、最初にすることは？",
-        choices: [
-          { value: "A", label: "誰かと話してヒントを探す" },
-          { value: "B", label: "情報を集めて、ひとりで深く考える" }
-        ]
-      },
-      {
-        id: 5,
-        question: "難しいプロジェクトに出会ったら？",
-        choices: [
-          { value: "A", label: "まず“最初の一歩”を踏み出す" },
-          { value: "B", label: "まず“全体の設計図”を描く" }
-        ]
-      },
-      {
-        id: 6,
-        question: "一番ストレスを感じるのは？",
-        choices: [
-          { value: "A", label: "細かい作業が延々と続くこと" },
-          { value: "B", label: "曖昧な指示で丸投げされること" }
-        ]
-      },
-      {
-        id: 7,
-        question: "あなたの強みに近いのは？",
-        choices: [
-          { value: "A", label: "人の本音を引き出すこと" },
-          { value: "B", label: "物事の構造を見抜くこと" }
-        ]
-      },
-      {
-        id: 8,
-        question: "仕事モードに入るスイッチは？",
-        choices: [
-          { value: "A", label: "会話・空気・雰囲気" },
-          { value: "B", label: "資料・数字・ロジック" }
-        ]
-      },
-      {
-        id: 9,
-        question: "あなたの心に刺さる言葉は？",
-        choices: [
-          { value: "A", label: "感情の奥に届く言葉" },
-          { value: "B", label: "本質を突くロジック" }
-        ]
-      },
-      {
-        id: 10,
-        question: "成果が生まれる瞬間は？",
-        choices: [
-          { value: "A", label: "「ここだ！」と思った瞬間、一気に形にするとき" },
-          { value: "B", label: "準備を積み重ねた結果が実を結ぶとき" }
-        ]
-      },
-      {
-        id: 11,
-        question: "あなたの集中スタイルは？",
-        choices: [
-          { value: "A", label: "短時間で一気に火がつく" },
-          { value: "B", label: "じっくり積み上げるほど強くなる" }
-        ]
-      },
-      {
-        id: 12,
-        question: "仕事で大切にしている軸は？",
-        choices: [
-          { value: "A", label: "誰を喜ばせたいか" },
-          { value: "B", label: "何を達成したいか" }
-        ]
-      },
-      {
-        id: 13,
-        question: "知らない人に選ばれるとき強いのは？",
-        choices: [
-          { value: "A", label: "発信の広がり（SNSなど）" },
-          { value: "B", label: "深い相談や口コミ" }
-        ]
-      },
-      {
-        id: 14,
-        question: "SNS発信で大事にするのは？",
-        choices: [
-          { value: "A", label: "勢い・世界観・直感" },
-          { value: "B", label: "価値・伝え方・設計" }
-        ]
-      },
-      {
-        id: 15,
-        question: "あなたが力を発揮できる場所は？",
-        choices: [
-          { value: "A", label: "リアル（対面の方が相手をつかめる）" },
-          { value: "B", label: "オンライン（こちらの方がやりやすい）" }
-        ]
-      },
-      {
-        id: 16,
-        question: "セールスの場面で強いのは？",
-        choices: [
-          { value: "A", label: "会話や対話で心をつかむ" },
-          { value: "B", label: "資料や説明で理解を深める" }
-        ]
-      },
-      {
-        id: 17,
-        question: "どちらの方が力を発揮しやすい？",
-        choices: [
-          { value: "A", label: "1対1の深い対話" },
-          { value: "B", label: "複数人の場の熱量" }
-        ]
-      },
-      {
-        id: 18,
-        question: "あなたの強みになりそうなのは？",
-        choices: [
-          { value: "A", label: "ネタ・企画の切れ味" },
-          { value: "B", label: "信頼を積み重ねること" }
-        ]
-      },
-      {
-        id: 19,
-        question: "新しい人と関わるときの第一歩は？",
-        choices: [
-          { value: "A", label: "まず空気や雰囲気をつくる" },
-          { value: "B", label: "まず課題を明確にする" }
-        ]
-      },
-      {
-        id: 20,
-        question: "あなたの集客が伸びる瞬間は？",
-        choices: [
-          { value: "A", label: "少数の人に深く刺さる発信をしたとき" },
-          { value: "B", label: "多くの人が共感するテーマを扱ったとき" }
-        ]
-      },
-      {
-        id: 21,
-        question: "あなたにとって理想の顧客は？",
-        choices: [
-          { value: "A", label: "あなたの温度や想いに共鳴する人" },
-          { value: "B", label: "あなたの知識や専門性に価値を感じる人" }
-        ]
-      },
-      {
-        id: 22,
-        question: "発信が止まりやすい理由は？",
-        choices: [
-          { value: "A", label: "発信を継続するのが苦手" },
-          { value: "B", label: "何を発信すればいいかわからない" }
-        ]
-      },
-      {
-        id: 23,
-        question: "うまくいかないときのパターンは？",
-        choices: [
-          { value: "A", label: "勢いで進みすぎて詰めが甘くなる" },
-          { value: "B", label: "考えすぎてタイミングを逃す" }
-        ]
-      },
-      {
-        id: 24,
-        question: "どちらが苦手？",
-        choices: [
-          { value: "A", label: "継続や習慣化" },
-          { value: "B", label: "柔軟な方向転換" }
-        ]
-      },
-      {
-        id: 25,
-        question: "メンタルが落ちる理由は？",
-        choices: [
-          { value: "A", label: "人間関係や温度差" },
-          { value: "B", label: "成果が見えないこと" }
-        ]
-      },
-      {
-        id: 26,
-        question: "周りから言われがちなことは？",
-        choices: [
-          { value: "A", label: "丁寧さが足りない" },
-          { value: "B", label: "丁寧すぎて遅い" }
-        ]
-      },
-      {
-        id: 27,
-        question: "一番苦手な作業は？",
-        choices: [
-          { value: "A", label: "事務・管理・数字" },
-          { value: "B", label: "人との対話・感情調整" }
-        ]
-      },
-      {
-        id: 28,
-        question: "気持ちの落ち方・戻り方は？",
-        choices: [
-          { value: "A", label: "急に落ちて、急に戻る" },
-          { value: "B", label: "じわじわ落ちて、じわじわ回復" }
-        ]
-      },
-      {
-        id: 29,
-        question: "仕事で避けたい環境は？",
-        choices: [
-          { value: "A", label: "細かく管理されること" },
-          { value: "B", label: "自由すぎる環境" }
-        ]
-      },
-      {
-        id: 30,
-        question: "リスクがある場面では？",
-        choices: [
-          { value: "A", label: "とりあえず動きたくなる" },
-          { value: "B", label: "慎重になりすぎる" }
-        ]
-      },
-      {
-        id: 31,
-        question: "あなたの“やらかし”傾向は？",
-        choices: [
-          { value: "A", label: "話しすぎる／開示しすぎる" },
-          { value: "B", label: "閉じすぎる／抱え込みすぎる" }
-        ]
-      },
-      {
-        id: 32,
-        question: "あなたがつまずきやすいのは？",
-        choices: [
-          { value: "A", label: "気持ちの波に振り回されること" },
-          { value: "B", label: "考えすぎて動きが止まること" }
-        ]
+  <section id="resultsScreen" class="screen printable">
+    <div class="toolbar">
+      <div>
+        <strong>結果ページ</strong><br />
+        <span class="tiny">PDFは「PDF保存 / 印刷」ボタンから出力してください。</span>
+      </div>
+      <div class="actions" style="margin-top:0">
+        <button class="secondary" id="restartBtn">最初からやり直す</button>
+        <button class="primary" id="printBtn">PDF保存 / 印刷</button>
+      </div>
+    </div>
+    <div id="resultsWrap" class="results-wrap"></div>
+  </section>
+</div>
+
+<script>
+const QUESTIONS = [
+  { no:1, text:"ひらめきが生まれる瞬間はどちらが多い？", A:"人との会話の中で、突然アイデアが降りてくる", B:"ひとりで整理していると、自然と形になってくる" },
+  { no:2, text:"仕事をスタートするときのあなたは？", A:"まず動いてみる。道は走りながら整える", B:"全体像を描いてから、確実に動き出す" },
+  { no:3, text:"仕事で自然と大切にしているのは？", A:"相手の気持ちや温度感", B:"目的や成果、ロジック" },
+  { no:4, text:"新しいアイデアが必要なとき、最初にすることは？", A:"誰かと話してヒントを探す", B:"情報を集めて、ひとりで深く考える" },
+  { no:5, text:"難しいプロジェクトに出会ったら？", A:"まず“最初の一歩”を踏み出す", B:"まず“全体の設計図”を描く" },
+  { no:6, text:"一番ストレスを感じるのは？", A:"細かい作業が延々と続くこと", B:"曖昧な指示で丸投げされること" },
+  { no:7, text:"あなたの強みに近いのは？", A:"人の本音を引き出すこと", B:"物事の構造を見抜くこと" },
+  { no:8, text:"仕事モードに入るスイッチは？", A:"会話・空気・雰囲気", B:"資料・数字・ロジック" },
+  { no:9, text:"あなたの心に刺さる言葉は？", A:"感情の奥に届く言葉", B:"本質を突くロジック" },
+  { no:10, text:"成果が生まれる瞬間は？", A:"「ここだ！」と思った瞬間、一気に形にするとき", B:"準備を積み重ねた結果が実を結ぶとき" },
+  { no:11, text:"あなたの集中スタイルは？", A:"短時間で一気に火がつく", B:"じっくり積み上げるほど強くなる" },
+  { no:12, text:"仕事で大切にしている軸は？", A:"誰を喜ばせたいか", B:"何を達成したいか" },
+  { no:13, text:"知らない人に選ばれるとき強いのは？", A:"発信の広がり（SNSなど）", B:"深い相談や口コミ" },
+  { no:14, text:"SNS発信で大事にするのは？", A:"勢い・世界観・直感", B:"価値・伝え方・設計" },
+  { no:15, text:"あなたが力を発揮できる場所は？", A:"リアル（対面の方が相手をつかめる）", B:"オンライン（こちらの方がやりやすい）" },
+  { no:16, text:"セールスの場面で強いのは？", A:"会話や対話で心をつかむ", B:"資料や説明で理解を深める" },
+  { no:17, text:"どちらの方が力を発揮しやすい？", A:"1対1の深い対話", B:"複数人の場の熱量" },
+  { no:18, text:"あなたの強みになりそうなのは？", A:"ネタ・企画の切れ味", B:"信頼を積み重ねること" },
+  { no:19, text:"新しい人と関わるときの第一歩は？", A:"まず空気や雰囲気をつくる", B:"まず課題を明確にする" },
+  { no:20, text:"あなたの集客が伸びる瞬間は？", A:"少数の人に深く刺さる発信をしたとき", B:"多くの人が共感するテーマを扱ったとき" },
+  { no:21, text:"あなたにとって理想の顧客は？", A:"あなたの温度や想いに共鳴する人", B:"あなたの知識や専門性に価値を感じる人" },
+  { no:22, text:"発信が止まりやすい理由は？", A:"発信を継続するのが苦手", B:"何を発信すればいいかわからない" },
+  { no:23, text:"うまくいかないときのパターンは？", A:"勢いで進みすぎて詰めが甘くなる", B:"考えすぎてタイミングを逃す" },
+  { no:24, text:"どちらが苦手？", A:"継続や習慣化", B:"柔軟な方向転換" },
+  { no:25, text:"メンタルが落ちる理由は？", A:"人間関係や温度差", B:"成果が見えないこと" },
+  { no:26, text:"周りから言われがちなことは？", A:"丁寧さが足りない", B:"丁寧すぎて遅い" },
+  { no:27, text:"一番苦手な作業は？", A:"事務・管理・数字", B:"人との対話・感情調整" },
+  { no:28, text:"気持ちの落ち方・戻り方は？", A:"急に落ちて、急に戻る", B:"じわじわ落ちて、じわじわ回復" },
+  { no:29, text:"仕事で避けたい環境は？", A:"細かく管理されること", B:"自由すぎる環境" },
+  { no:30, text:"リスクがある場面では？", A:"とりあえず動きたくなる", B:"慎重になりすぎる" },
+  { no:31, text:"あなたの“やらかし”傾向は？", A:"話しすぎる／開示しすぎる", B:"閉じすぎる／抱え込みすぎる" },
+  { no:32, text:"あなたがつまずきやすいのは？", A:"気持ちの波に振り回されること", B:"考えすぎて動きが止まること" }
+];
+
+const WORK_TYPES = {
+  1:{key:"analysis", short:"深掘り分析タイプ", title:"深掘り分析し勝ち", summary:"構造を読み解き、本質を見抜くことで勝ち筋をつくるタイプです。"},
+  2:{key:"detail", short:"細部こだわりタイプ", title:"細部までこだわり勝ち", summary:"粗さを減らし、品質を高めることで信頼を積み上げるタイプです。"},
+  3:{key:"team", short:"仲間のチカラタイプ", title:"仲間のチカラで勝ち", summary:"人の気持ちをつなぎ、周囲の力を引き出すことで大きな成果に変えるタイプです。"},
+  4:{key:"specialty", short:"専門性タイプ", title:"専門性で信頼獲得し勝ち", summary:"専門知識と言語化力を武器に、納得と安心で選ばれるタイプです。"},
+  5:{key:"commit", short:"結果にコミットタイプ", title:"結果にコミットし勝ち", summary:"成果に責任を持ち、ゴールまでやり切ることで信頼を得るタイプです。"},
+  6:{key:"newvalue", short:"新しい価値タイプ", title:"新価値を生み出して勝ち", summary:"まだない切り口や企画を生み出し、新鮮さで選ばれるタイプです。"},
+  7:{key:"shortcut", short:"最短ルートタイプ", title:"最短ルートで進み勝ち", summary:"全体設計をつかみ、無駄の少ない勝ち方を組み立てるタイプです。"},
+  8:{key:"dialog", short:"対話の深さタイプ", title:"対話の深さで全解決し勝ち", summary:"本音を引き出す対話力で、相手の核心課題に届くタイプです。"},
+  9:{key:"wave", short:"波に乗りタイプ", title:"時代の波に乗り勝ち", summary:"勢い・熱量・タイミングをつかみ、流れを味方にできるタイプです。"}
+};
+
+const MARKETING_TYPES = {
+  1:{key:"collab", short:"協業コラボタイプ", title:"競合コラボで勢いを生み勝ち", summary:"他者との掛け算で話題と信頼を一気に増幅させるタイプです。"},
+  2:{key:"volume", short:"発信量タイプ", title:"発信量・存在感勝ち", summary:"見える量と接触回数で存在感を高め、想起を強くするタイプです。"},
+  3:{key:"words", short:"言葉で心をつかむタイプ", title:"言葉で心を掴み勝ち", summary:"伝え方・文章・語りで共鳴を生み、納得をつくるタイプです。"},
+  4:{key:"referral", short:"紹介スパイラルタイプ", title:"実績から紹介スパイラル勝ち", summary:"成果物や口コミが次の紹介を呼び、信頼の循環をつくるタイプです。"},
+  5:{key:"system", short:"仕組み導線タイプ", title:"仕組み・導線づくり勝ち", summary:"情報設計と導線整備で、自然に選ばれる流れをつくるタイプです。"},
+  6:{key:"action", short:"行動接点タイプ", title:"行動・接点数で勝ち", summary:"会う・動く・接点を重ねることで、関係を現実化していくタイプです。"},
+  7:{key:"soft", short:"ゆる接点タイプ", title:"ゆる接点で繋がり勝ち", summary:"強く売り込まず、日常の軽やかな接点から信頼を育てるタイプです。"},
+  8:{key:"place", short:"場づくりタイプ", title:"人が集まる場づくり勝ち", summary:"場の空気や体験価値を設計し、集まりたくなる理由をつくるタイプです。"}
+};
+
+const TYPE_BY_STEM = {
+  "甲":"岩盤信頼タイプ","乙":"満月の引力タイプ","丙":"導く太陽タイプ","丁":"心に灯し火タイプ","戊":"高山の頂タイプ",
+  "己":"大地安定タイプ","庚":"稲妻インパクトタイプ","辛":"深海探求タイプ","壬":"旋風ムーブメントタイプ","癸":"流星群タイプ"
+};
+const STEMS = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+const BRANCHES = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+const YANG_STARS = new Set(["比肩","劫財","食神","傷官","偏財","偏官"]);
+const ELEMENT_OF_STEM = {"甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水"};
+const POLARITY = {"甲":"陽","乙":"陰","丙":"陽","丁":"陰","戊":"陽","己":"陰","庚":"陽","辛":"陰","壬":"陽","癸":"陰"};
+const GENERATES = {"木":"火","火":"土","土":"金","金":"水","水":"木"};
+const CONTROLS = {"木":"土","火":"金","土":"水","金":"木","水":"火"};
+
+const state = {
+  name: "",
+  birthDate: "",
+  answers: {},
+  page: 0
+};
+
+const progressBar = document.getElementById("progressBar");
+const questionList = document.getElementById("questionList");
+const pageTitle = document.getElementById("pageTitle");
+const prevPageBtn = document.getElementById("prevPageBtn");
+const birthYearInput = document.getElementById("birthYear");
+const birthMonthInput = document.getElementById("birthMonth");
+const birthDayInput = document.getElementById("birthDay");
+const userNameInput = document.getElementById("userName");
+const birthError = document.getElementById("birthError");
+const resultsWrap = document.getElementById("resultsWrap");
+
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(el => el.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+document.getElementById("startBtn").addEventListener("click", ()=>showScreen("birth"));
+document.querySelectorAll("[data-goto]").forEach(btn => btn.addEventListener("click", ()=>showScreen(btn.dataset.goto)));
+function normalizeDigits(value, max){
+  return (value || "").replace(/\D/g, "").slice(0, max);
+}
+function setupBirthField(input, max, nextInput){
+  input.addEventListener("input", ()=>{
+    input.value = normalizeDigits(input.value, max);
+    if(nextInput && input.value.length === max) nextInput.focus();
+  });
+}
+setupBirthField(birthYearInput, 4, birthMonthInput);
+setupBirthField(birthMonthInput, 2, birthDayInput);
+setupBirthField(birthDayInput, 2, null);
+function buildBirthDate(){
+  const y = normalizeDigits(birthYearInput.value, 4);
+  const m = normalizeDigits(birthMonthInput.value, 2);
+  const d = normalizeDigits(birthDayInput.value, 2);
+  if(y.length !== 4 || m.length < 1 || d.length < 1) return "";
+  const mm = m.padStart(2, "0");
+  const dd = d.padStart(2, "0");
+  const dt = new Date(`${y}-${mm}-${dd}T00:00:00`);
+  if(Number.isNaN(dt.getTime())) return "";
+  if(dt.getFullYear() !== Number(y) || dt.getMonth()+1 !== Number(mm) || dt.getDate() !== Number(dd)) return "";
+  return `${y}-${mm}-${dd}`;
+}
+document.getElementById("toQuestionsBtn").addEventListener("click", ()=>{
+  const birthDate = buildBirthDate();
+  if(!birthDate || !userNameInput.value.trim()){
+    birthError.style.display="block";
+    return;
+  }
+  birthError.style.display="none";
+  state.name = userNameInput.value.trim();
+  state.birthDate = birthDate;
+  state.page = 0;
+  renderQuestionPage();
+  showScreen("questions");
+});
+document.getElementById("restartBtn").addEventListener("click", ()=>{
+  state.name = "";
+  state.birthDate = "";
+  state.answers = {};
+  state.page = 0;
+  birthYearInput.value = "";
+  birthMonthInput.value = "";
+  birthDayInput.value = "";
+  userNameInput.value = "";
+  resultsWrap.innerHTML = "";
+  resultsWrap.classList.remove("active");
+  showScreen("intro");
+});
+document.getElementById("printBtn").addEventListener("click", ()=>window.print());
+
+prevPageBtn.addEventListener("click", ()=>{
+  if(state.page > 0){
+    state.page--;
+    renderQuestionPage();
+  }
+});
+
+
+function renderQuestionPage(){
+  progressBar.innerHTML = "";
+  for(let i=0;i<QUESTIONS.length;i++){
+    const span = document.createElement("span");
+    if(i <= state.page) span.classList.add("on");
+    progressBar.appendChild(span);
+  }
+  const q = QUESTIONS[state.page];
+  pageTitle.textContent = `質問 ${q.no} / ${QUESTIONS.length}`;
+  questionList.innerHTML = "";
+  const ans = state.answers[q.no];
+  const el = document.createElement("div");
+  el.className = "question";
+  el.innerHTML = `
+    <div class="qno">Q${q.no}</div>
+    <div class="qtext">${q.text}</div>
+    <div class="options single-question">
+      <button class="opt ${ans==='A'?'selected':''}" data-no="${q.no}" data-value="A">
+        <span class="choice-label">A</span><small>${q.A}</small>
+      </button>
+      <button class="opt ${ans==='B'?'selected':''}" data-no="${q.no}" data-value="B">
+        <span class="choice-label">B</span><small>${q.B}</small>
+      </button>
+    </div>
+  `;
+  questionList.appendChild(el);
+  questionList.querySelectorAll(".opt").forEach(btn => btn.addEventListener("click", ()=>{
+    const no = Number(btn.dataset.no);
+    const value = btn.dataset.value;
+    state.answers[no] = value;
+    if(state.page < QUESTIONS.length - 1){
+      state.page++;
+      renderQuestionPage();
+    }else{
+      renderResults();
+      showScreen("resultsScreen");
+    }
+  }));
+  prevPageBtn.style.visibility = state.page===0 ? "hidden":"visible";
+}
+
+// --- 四柱推命ベース（簡易実装） ---
+function parseDate(value){
+  const [y,m,d] = value.split("-").map(Number);
+  return {y,m,d};
+}
+
+function getYearStemBySolar(dateObj){
+  const {y,m,d} = dateObj;
+  const year = (m > 2 || (m === 2 && d >= 4)) ? y : y - 1;
+  const stemIndex = (year - 4) % 10;
+  return STEMS[(stemIndex + 10) % 10];
+}
+
+function getMonthBranchIndex(dateObj){
+  const {m,d} = dateObj;
+  if ((m === 2 && d >= 4) || (m === 3 && d < 6)) return 2;  // 寅
+  if ((m === 3 && d >= 6) || (m === 4 && d < 5)) return 3;  // 卯
+  if ((m === 4 && d >= 5) || (m === 5 && d < 6)) return 4;  // 辰
+  if ((m === 5 && d >= 6) || (m === 6 && d < 6)) return 5;  // 巳
+  if ((m === 6 && d >= 6) || (m === 7 && d < 7)) return 6;  // 午
+  if ((m === 7 && d >= 7) || (m === 8 && d < 8)) return 7;  // 未
+  if ((m === 8 && d >= 8) || (m === 9 && d < 8)) return 8;  // 申
+  if ((m === 9 && d >= 8) || (m === 10 && d < 8)) return 9; // 酉
+  if ((m === 10 && d >= 8) || (m === 11 && d < 7)) return 10;// 戌
+  if ((m === 11 && d >= 7) || (m === 12 && d < 7)) return 11;// 亥
+  if ((m === 12 && d >= 7) || (m === 1 && d < 6)) return 0; // 子
+  return 1; // 丑
+}
+
+function getMonthStem(yearStem, monthBranchIndex){
+  const baseByYearStem = {
+    "甲":"丙","己":"丙","乙":"戊","庚":"戊","丙":"庚","辛":"庚","丁":"壬","壬":"壬","戊":"甲","癸":"甲"
+  };
+  const firstStem = baseByYearStem[yearStem];
+  const firstIndex = STEMS.indexOf(firstStem);
+  const monthOrder = [2,3,4,5,6,7,8,9,10,11,0,1].indexOf(monthBranchIndex); // 寅始まり
+  return STEMS[(firstIndex + monthOrder) % 10];
+}
+
+function dayDiffFromRef(dateObj){
+  const refUTC = Date.UTC(1984,1,2); // 1984-02-02 を甲子日として採用
+  const targetUTC = Date.UTC(dateObj.y, dateObj.m-1, dateObj.d);
+  return Math.round((targetUTC - refUTC) / 86400000);
+}
+
+function getDayStem(dateObj){
+  const diff = dayDiffFromRef(dateObj);
+  const index = ((diff % 10) + 10) % 10;
+  return STEMS[index];
+}
+
+function tenGod(dayStem, otherStem){
+  const dayEl = ELEMENT_OF_STEM[dayStem];
+  const otherEl = ELEMENT_OF_STEM[otherStem];
+  const samePolarity = POLARITY[dayStem] === POLARITY[otherStem];
+  if(dayEl === otherEl) return samePolarity ? "比肩" : "劫財";
+  if(GENERATES[dayEl] === otherEl) return samePolarity ? "食神" : "傷官";
+  if(CONTROLS[dayEl] === otherEl) return samePolarity ? "偏財" : "正財";
+  if(GENERATES[otherEl] === dayEl) return samePolarity ? "偏印" : "印綬";
+  if(CONTROLS[otherEl] === dayEl) return samePolarity ? "偏官" : "正官";
+  return "比肩";
+}
+
+function diagnoseValueType(dateStr){
+  const dateObj = parseDate(dateStr);
+  const yearStem = getYearStemBySolar(dateObj);
+  const monthBranchIndex = getMonthBranchIndex(dateObj);
+  const monthStem = getMonthStem(yearStem, monthBranchIndex);
+  const dayStem = getDayStem(dateObj);
+  const star = tenGod(dayStem, monthStem);
+  const yinYang = YANG_STARS.has(star) ? "陽" : "陰";
+  const typeName = TYPE_BY_STEM[dayStem] + "｜" + yinYang;
+  return {
+    yearStem,
+    monthStem,
+    monthBranch: BRANCHES[monthBranchIndex],
+    dayStem,
+    tenGod: star,
+    yinYang,
+    typeName,
+    rootType: TYPE_BY_STEM[dayStem]
+  };
+}
+
+// --- スコアリング ---
+function scoreWork(answers){
+  const score = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
+  const map = {
+    1:{A:9,B:1},2:{A:9,B:7},3:{A:8,B:5},4:{A:3,B:1},
+    5:{A:6,B:7},6:{A:2,B:7},7:{A:8,B:1},8:{A:3,B:4},
+    9:{A:8,B:4},10:{A:6,B:5},11:{A:9,B:2},12:{A:3,B:5}
+  };
+  for(let q=1;q<=12;q++) score[map[q][answers[q]]]++;
+  const tied = getTopIds(score);
+  let winner = tied[0];
+  if(tied.length > 1){
+    const priorityQuestions = [7,10,12,2];
+    for(const q of priorityQuestions){
+      const id = map[q][answers[q]];
+      if(tied.includes(id)){ winner = id; break; }
+    }
+    if(tied.length > 1){
+      const latter = {};
+      tied.forEach(id => latter[id]=0);
+      for(let q=7;q<=12;q++){
+        const id = map[q][answers[q]];
+        if(latter[id] !== undefined) latter[id]++;
       }
-    ];
-
-    let cur = 0;
-    const answers = [];
-
-    const VALUE_TYPE_DATA = {
-      taiyo_yo: {
-        title: "導く太陽（陽）",
-        catchCopy: "自分の信念と在り方で、人・企業・社会に“光”を届けたい。",
-        mainTitle: "あなたが、もっとも大切にしている「勝ち観」は？",
-        mainBody: `“自分の信念と在り方そのもので、周りに光を届けたい”という価値観です。
-
-あなたは、強さよりも温かさ、押しつけよりも希望を大切にし、
-「自分がどう生きるか」が最大のメッセージになると信じています。
-
-誰かを変えようとするのではなく、
-あなたが誠実に進む姿勢そのものが周りを照らし、
-自然と人が動き始めます。
-
-あなたにとって仕事とは、
-成果を出す手段ではなく、
-「自分の信じる道を貫きながら、誰かの未来に明るさを灯すこと」。
-
-その在り方に共鳴した人が前へ進み、
-新しい選択や覚悟を持つ瞬間に、深い喜びを感じます。
-
-完璧である必要はなく、
-弱さも迷いもそのまま光の一部になります。
-
-あなたがあなたらしく立っているだけで、
-周りの空気がほぐれ、希望の方向へ動いていきます。
-
-導く太陽の勝ち観は、
-存在そのものが“道標”になること。
-
-あなたの光は、誰かの勇気の始まりです。`,
-        naturalValues: "元気でいたい／前に進みたい／空気を明るくしたい／希望を見たい／導きたい／信念を貫きたい／存在価値で照らしたい／優しさで包みたい／未来を信じたい／良い流れをつくりたい",
-        keepValues: `
-<li><span class="result-item-title">信念を貫いて生きたい</span><br>自分の在り方こそが大事で、人を導く力になると知っている。</li>
-<li><span class="result-item-title">未来を明るく照らしたい</span><br>言葉よりも姿勢で、希望の方向を示したい価値観。</li>
-<li><span class="result-item-title">存在そのもので人に影響を与えたい</span><br>振る舞いや佇まいが周りを前向きにする。</li>
-<li><span class="result-item-title">本音で向き合いたい</span><br>嘘のないスタンスが、人の心を動かすと感じている。</li>
-<li><span class="result-item-title">弱さも光に変えたい</span><br>完璧より“人間らしさ”が魅力と信じている。</li>`,
-        releaseValues: `
-<li><span class="result-item-title">みんなに好かれなければいけない</span><br>迎合すると魅力が消える。信念の方が重要。</li>
-<li><span class="result-item-title">弱さを隠さなければいけない</span><br>太陽の弱さはむしろ光になる。</li>
-<li><span class="result-item-title">結果だけを求めなければいけない</span><br>在り方こそがあなたの価値。</li>
-<li><span class="result-item-title">急いで成果を出さなければいけない</span><br>太陽の光はゆっくり効く。焦りは逆効果。</li>
-<li><span class="result-item-title">人を全部救わなければいけない</span><br>あなたは“照らす存在”。背負う必要はない。</li>`
-      },
-
-      taiyo_in: createPlaceholderValueType("導く太陽（陰）"),
-      inazuma_yo: createPlaceholderValueType("稲妻インパクト（陽）"),
-      inazuma_in: createPlaceholderValueType("稲妻インパクト（陰）"),
-      takayama_yo: createPlaceholderValueType("高山の頂（陽）"),
-      takayama_in: createPlaceholderValueType("高山の頂（陰）"),
-      tomoshibi_yo: createPlaceholderValueType("心に灯し火（陽）"),
-      tomoshibi_in: createPlaceholderValueType("心に灯し火（陰）"),
-      mangetsu_yo: createPlaceholderValueType("満月の引力（陽）"),
-      mangetsu_in: createPlaceholderValueType("満月の引力（陰）"),
-      daichi_yo: createPlaceholderValueType("大地安定（陽）"),
-      daichi_in: createPlaceholderValueType("大地安定（陰）"),
-      shinkai_yo: createPlaceholderValueType("深海探求（陽）"),
-      shinkai_in: createPlaceholderValueType("深海探求（陰）"),
-      ganban_yo: createPlaceholderValueType("岩盤信頼（陽）"),
-      ganban_in: createPlaceholderValueType("岩盤信頼（陰）"),
-      ryuseigun_yo: createPlaceholderValueType("流星群（陽）"),
-      ryuseigun_in: createPlaceholderValueType("流星群（陰）"),
-      senpu_yo: createPlaceholderValueType("旋風ムーブメント（陽）"),
-      senpu_in: createPlaceholderValueType("旋風ムーブメント（陰）")
-    };
-
-    function createPlaceholderValueType(title) {
-      return {
-        title,
-        catchCopy: "このタイプの正式文言は次の差し替えで反映します。",
-        mainTitle: "あなたが、もっとも大切にしている「勝ち観」は？",
-        mainBody: `現在、このタイプはタイトル切り替え確認用の仮表示です。
-
-正式本文は、すでに送ってもらっているデータを次の差し替えで反映します。`,
-        naturalValues: "正式反映前",
-        keepValues: `<li><span class="result-item-title">正式データ反映予定</span><br>次の差し替えでこのタイプ固有の内容に変わります。</li>`,
-        releaseValues: `<li><span class="result-item-title">正式データ反映予定</span><br>次の差し替えでこのタイプ固有の内容に変わります。</li>`
-      };
+      winner = getTopIds(latter)[0];
     }
+  }
+  return {score, winner};
+}
 
-    const STEMS = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+function scoreMarketing(answers){
+  const score = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0};
+  const map = {
+    13:{A:2,B:4},14:{A:2,B:3},15:{A:6,B:5},16:{A:3,B:5},
+    17:{A:7,B:8},18:{A:1,B:4},19:{A:8,B:6},20:{A:7,B:1}
+  };
+  for(let q=13;q<=20;q++) score[map[q][answers[q]]]++;
+  const bonus = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0};
+  if(answers[15]==="A" && answers[19]==="B"){ score[6]++; bonus[6]++; }
+  if(answers[17]==="A" && answers[20]==="A"){ score[7]++; bonus[7]++; }
+  if(answers[18]==="A" && answers[20]==="B"){ score[1]++; bonus[1]++; }
+  if(answers[13]==="B" && answers[18]==="B"){ score[4]++; bonus[4]++; }
+  if(answers[14]==="B" && answers[16]==="B"){ score[5]++; bonus[5]++; }
+  if(answers[17]==="B" && answers[19]==="A"){ score[8]++; bonus[8]++; }
 
-    const STEM_META = {
-      "甲": { element: "wood",  polarity: "yang" },
-      "乙": { element: "wood",  polarity: "yin"  },
-      "丙": { element: "fire",  polarity: "yang" },
-      "丁": { element: "fire",  polarity: "yin"  },
-      "戊": { element: "earth", polarity: "yang" },
-      "己": { element: "earth", polarity: "yin"  },
-      "庚": { element: "metal", polarity: "yang" },
-      "辛": { element: "metal", polarity: "yin"  },
-      "壬": { element: "water", polarity: "yang" },
-      "癸": { element: "water", polarity: "yin"  }
-    };
-
-    const DAY_STEM_TO_BASE_KEY = {
-      "甲": "ganban",
-      "乙": "mangetsu",
-      "丙": "taiyo",
-      "丁": "tomoshibi",
-      "戊": "takayama",
-      "己": "daichi",
-      "庚": "inazuma",
-      "辛": "shinkai",
-      "壬": "senpu",
-      "癸": "ryuseigun"
-    };
-
-    const YANG_GODS = ["比肩", "劫財", "食神", "傷官", "偏財", "偏官"];
-
-    function buildUtcDateFromInput() {
-      const y = parseInt(document.getElementById("by").value || "0", 10);
-      const m = parseInt(document.getElementById("bm").value || "0", 10);
-      const d = parseInt(document.getElementById("bd").value || "0", 10);
-      return new Date(Date.UTC(y, m - 1, d));
+  const tied = getTopIds(score);
+  let winner = tied[0];
+  if(tied.length > 1){
+    const priorityQuestions = [20,19,16,18];
+    for(const q of priorityQuestions){
+      const id = map[q][answers[q]];
+      if(tied.includes(id)){ winner = id; break; }
     }
-
-    function getYearStemIndex(date) {
-      let year = date.getUTCFullYear();
-      const month = date.getUTCMonth() + 1;
-      const day = date.getUTCDate();
-
-      if (month < 2 || (month === 2 && day < 4)) {
-        year -= 1;
-      }
-
-      return ((year - 4) % 10 + 10) % 10;
+    if(tied.length > 1){
+      const bonusAmongTied = {};
+      tied.forEach(id => bonusAmongTied[id] = bonus[id]);
+      winner = getTopIds(bonusAmongTied)[0];
     }
+  }
+  return {score, winner, bonus};
+}
 
-    function getSolarMonthOrder(date) {
-      const month = date.getUTCMonth() + 1;
-      const day = date.getUTCDate();
-      const md = month * 100 + day;
+function getTopIds(scoreObj){
+  const entries = Object.entries(scoreObj).map(([k,v])=>({id:Number(k), value:v}));
+  const max = Math.max(...entries.map(x=>x.value));
+  return entries.filter(x=>x.value===max).sort((a,b)=>a.id-b.id).map(x=>x.id);
+}
 
-      if (md >= 204 && md < 306) return 0;
-      if (md >= 306 && md < 405) return 1;
-      if (md >= 405 && md < 506) return 2;
-      if (md >= 506 && md < 606) return 3;
-      if (md >= 606 && md < 707) return 4;
-      if (md >= 707 && md < 808) return 5;
-      if (md >= 808 && md < 908) return 6;
-      if (md >= 908 && md < 1008) return 7;
-      if (md >= 1008 && md < 1107) return 8;
-      if (md >= 1107 && md < 1207) return 9;
-      if (md >= 1207 || md < 106) return 10;
-      return 11;
+function scoreLosePattern(answers){
+  let A = 0, B = 0;
+  for(let q=22;q<=32;q++){
+    if(answers[q]==="A") A++;
+    if(answers[q]==="B") B++;
+  }
+  if(A===B){
+    const priority = [23,30,32];
+    for(const q of priority){
+      if(answers[q]==="A") return {A, B, dominant:"A系"};
+      if(answers[q]==="B") return {A, B, dominant:"B系"};
     }
+  }
+  return {A, B, dominant: A >= B ? "A系" : "B系"};
+}
 
-    function getMonthStemIndex(yearStemIndex, monthOrder) {
-      let startStemIndex = 0;
+// --- レーダー（専用ファイル未提供のため、設問傾向から可視化） ---
+function calcWorkRadar(answers){
+  const axis = {
+    "分析力": 50,
+    "設計力": 50,
+    "対話力": 50,
+    "推進力": 50,
+    "継続力": 50,
+    "共創力": 50,
+    "言語化力": 50,
+    "調整力": 50
+  };
+  const adjust = (name, v)=>axis[name] = Math.max(20, Math.min(95, axis[name] + v));
+  if(answers[1]==="B") adjust("分析力", 12); else { adjust("推進力", 8); adjust("共創力", 4); }
+  if(answers[2]==="B") adjust("設計力", 12); else adjust("推進力", 10);
+  if(answers[3]==="A") { adjust("対話力", 10); adjust("調整力", 6); } else adjust("設計力", 8);
+  if(answers[4]==="B") adjust("分析力", 10); else adjust("共創力", 10);
+  if(answers[5]==="A") adjust("推進力", 10); else { adjust("設計力", 8); adjust("継続力", 4); }
+  if(answers[6]==="A") adjust("継続力", -10); else { adjust("設計力", 6); adjust("分析力", 4); }
+  if(answers[7]==="A") { adjust("対話力", 10); adjust("言語化力", 6); } else adjust("分析力", 10);
+  if(answers[8]==="A") adjust("共創力", 9); else adjust("分析力", 6);
+  if(answers[9]==="A") { adjust("対話力", 8); adjust("言語化力", 8); } else adjust("分析力", 7);
+  if(answers[10]==="A") adjust("推進力", 10); else adjust("継続力", 10);
+  if(answers[11]==="A") adjust("推進力", 8); else adjust("継続力", 10);
+  if(answers[12]==="A") { adjust("共創力", 8); adjust("調整力", 8); } else adjust("設計力", 8);
+  return axis;
+}
 
-      if (yearStemIndex === 0 || yearStemIndex === 5) startStemIndex = 2;
-      else if (yearStemIndex === 1 || yearStemIndex === 6) startStemIndex = 4;
-      else if (yearStemIndex === 2 || yearStemIndex === 7) startStemIndex = 6;
-      else if (yearStemIndex === 3 || yearStemIndex === 8) startStemIndex = 8;
-      else startStemIndex = 0;
+function calcMarketingRadar(answers){
+  const axis = {
+    "発信力": 50,
+    "言語化力": 50,
+    "接点力": 50,
+    "場づくり力": 50,
+    "紹介循環力": 50,
+    "仕組み力": 50,
+    "共感力": 50,
+    "拡散力": 50
+  };
+  const adjust = (name, v)=>axis[name] = Math.max(20, Math.min(95, axis[name] + v));
+  if(answers[13]==="A") adjust("発信力", 12); else adjust("紹介循環力", 10);
+  if(answers[14]==="A") { adjust("発信力", 10); adjust("拡散力", 8); } else adjust("言語化力", 12);
+  if(answers[15]==="A") adjust("接点力", 12); else adjust("仕組み力", 12);
+  if(answers[16]==="A") { adjust("共感力", 10); adjust("言語化力", 8); } else adjust("仕組み力", 10);
+  if(answers[17]==="A") { adjust("共感力", 8); adjust("接点力", 8); } else adjust("場づくり力", 12);
+  if(answers[18]==="A") { adjust("拡散力", 10); adjust("場づくり力", 6); } else adjust("紹介循環力", 10);
+  if(answers[19]==="A") { adjust("場づくり力", 10); adjust("共感力", 6); } else adjust("接点力", 10);
+  if(answers[20]==="A") { adjust("言語化力", 6); adjust("共感力", 6); adjust("発信力", 4); } else { adjust("発信力", 8); adjust("拡散力", 8); }
+  return axis;
+}
 
-      return (startStemIndex + monthOrder) % 10;
-    }
+function renderRadar(canvas, axisMap){
+  const ctx = canvas.getContext("2d");
+  const labels = Object.keys(axisMap);
+  const values = Object.values(axisMap);
+  const w = canvas.width = 560;
+  const h = canvas.height = 440;
+  const cx = w/2, cy = h/2 + 8;
+  const radius = 150;
+  ctx.clearRect(0,0,w,h);
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "#d0d7e4";
+  for(let level=1; level<=5; level++){
+    ctx.beginPath();
+    labels.forEach((_, i)=>{
+      const ang = (-Math.PI/2) + (Math.PI*2 * i / labels.length);
+      const r = radius * (level/5);
+      const x = cx + Math.cos(ang)*r;
+      const y = cy + Math.sin(ang)*r;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.closePath();
+    ctx.stroke();
+  }
+  labels.forEach((label, i)=>{
+    const ang = (-Math.PI/2) + (Math.PI*2 * i / labels.length);
+    const x = cx + Math.cos(ang)*radius;
+    const y = cy + Math.sin(ang)*radius;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy); ctx.lineTo(x,y); ctx.stroke();
+    const lx = cx + Math.cos(ang)*(radius+28);
+    const ly = cy + Math.sin(ang)*(radius+28);
+    ctx.fillStyle = "#334155";
+    ctx.font = "700 18px sans-serif";
+    ctx.textAlign = lx < cx - 10 ? "right" : lx > cx + 10 ? "left" : "center";
+    ctx.textBaseline = ly < cy - 10 ? "bottom" : ly > cy + 10 ? "top" : "middle";
+    ctx.fillText(label, lx, ly);
+  });
+  ctx.beginPath();
+  values.forEach((v, i)=>{
+    const ang = (-Math.PI/2) + (Math.PI*2 * i / labels.length);
+    const r = radius * (v/100);
+    const x = cx + Math.cos(ang)*r;
+    const y = cy + Math.sin(ang)*r;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = "rgba(47,111,235,.18)";
+  ctx.strokeStyle = "#2f6feb";
+  ctx.lineWidth = 3;
+  ctx.fill();
+  ctx.stroke();
+  values.forEach((v, i)=>{
+    const ang = (-Math.PI/2) + (Math.PI*2 * i / labels.length);
+    const r = radius * (v/100);
+    const x = cx + Math.cos(ang)*r;
+    const y = cy + Math.sin(ang)*r;
+    ctx.beginPath();
+    ctx.arc(x,y,5,0,Math.PI*2);
+    ctx.fillStyle = "#2f6feb";
+    ctx.fill();
+  });
+}
 
-    function getDayStemIndex(date) {
-      const base = Date.UTC(1984, 1, 2);
-      const current = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
-      const diffDays = Math.floor((current - base) / 86400000);
-      return ((diffDays % 10) + 10) % 10;
-    }
+function customerText(workType){
+  const t = WORK_TYPES[workType];
+  const intro = {
+    analysis:"問題の原因を整理したい人",
+    detail:"精度や品質に安心感を求める人",
+    team:"一人では進みにくく、伴走や対話が必要な人",
+    specialty:"知識と根拠で納得したい人",
+    commit:"結果責任を求め、前進したい人",
+    newvalue:"新しい切り口で突破口を探したい人",
+    shortcut:"遠回りせず、正しい順番で進みたい人",
+    dialog:"本音を言葉にできず、整理してほしい人",
+    wave:"勢いとタイミングを逃したくない人"
+  }[t.key];
+  return `
+    <p>あなたと相性が良いのは、<strong>${intro}</strong>です。</p>
+    <p>${t.title}タイプのあなたは、相手の状況を見ながら「どこを整えると前に進みやすいか」を見つけるのが得意です。だからこそ、最初から完成を求める人よりも、いま少し迷っていても前進意欲のある人との相性が高まります。</p>
+    <p>逆に、表面的な価格比較だけで判断する人や、変化の意思が薄い人は噛み合いにくい傾向があります。</p>
+  `;
+}
 
-    function generateElement(el) {
-      return {
-        wood: "fire",
-        fire: "earth",
-        earth: "metal",
-        metal: "water",
-        water: "wood"
-      }[el];
-    }
+function partnerWorkText(workType){
+  const t = WORK_TYPES[workType];
+  const role = {
+    analysis:"アイデアを深く掘り、構造化してくれる人",
+    detail:"品質管理や運用を丁寧に支えてくれる人",
+    team:"人を巻き込み、空気を温めてくれる人",
+    specialty:"専門知識や根拠を補強してくれる人",
+    commit:"期限と成果を前に進める人",
+    newvalue:"企画を広げ、突破口を発見できる人",
+    shortcut:"道筋を明確にし、無駄を減らしてくれる人",
+    dialog:"相手の本音を受け止め、対話を深くできる人",
+    wave:"スピード感と熱量で流れをつくれる人"
+  }[t.key];
+  return `
+    <p>あなたの強みをさらに活かす相手は、<strong>${role}</strong>です。</p>
+    <p>${t.title}タイプは単独でも成果を出しやすいですが、補完相手が入ることで、強みがさらに見えやすくなります。特に「自分が自然にやってしまうこと」と「つい後回しにしがちなこと」が逆の人が好相性です。</p>
+  `;
+}
 
-    function controlElement(el) {
-      return {
-        wood: "earth",
-        earth: "water",
-        water: "fire",
-        fire: "metal",
-        metal: "wood"
-      }[el];
-    }
+function partnerMarketingText(marketingType){
+  const t = MARKETING_TYPES[marketingType];
+  const role = {
+    collab:"関係先との橋渡しがうまく、掛け算企画を形にできる人",
+    volume:"継続発信と露出設計を回せる人",
+    words:"伝え方を磨き、言葉の解像度を上げられる人",
+    referral:"実績整理と紹介導線づくりが得意な人",
+    system:"LP・導線・セールス設計を整えられる人",
+    action:"会う・動く・場に出ることをいとわない人",
+    soft:"軽やかな接点づくりで関係を温められる人",
+    place:"イベントやコミュニティの空気をつくれる人"
+  }[t.key];
+  return `
+    <p>あなたの集客勝ち筋を強める相手は、<strong>${role}</strong>です。</p>
+    <p>${t.title}は、一人でも回せますが、相性の良いパートナーが入ると再現性が一段上がります。自分の得意な集客導線を太くしつつ、苦手な工程を補ってくれる相手と組むと伸びやすくなります。</p>
+  `;
+}
 
-    function getTenGod(dayStem, monthStem) {
-      const dm = STEM_META[dayStem];
-      const ms = STEM_META[monthStem];
-      const samePolarity = dm.polarity === ms.polarity;
+function typeDescription(valueInfo){
+  const root = valueInfo.rootType.replace("タイプ","");
+  const tone = valueInfo.yinYang === "陽" ? "外へ広げる力" : "内側で深める力";
+  const angle = {
+    "導く太陽タイプ":"周囲を照らし、方向を示すこと",
+    "稲妻インパクトタイプ":"一撃で空気を変えること",
+    "高山の頂タイプ":"高い基準と理想を掲げること",
+    "心に灯し火タイプ":"人の気持ちをあたためること",
+    "満月の引力タイプ":"自然に人を惹きつけること",
+    "大地安定タイプ":"安心できる土台を整えること",
+    "深海探求タイプ":"深く潜って本質に届くこと",
+    "岩盤信頼タイプ":"ぶれない信頼を積み上げること",
+    "流星群タイプ":"軽やかに広がり、刺激を生むこと",
+    "旋風ムーブメントタイプ":"流れを動かし、新しい風を起こすこと"
+  }[valueInfo.rootType];
+  return `
+    <p>あなたの仕事の勝ち観は、<strong>${angle}</strong>にあります。${root}の資質に、${tone}が重なることで、仕事では「どう勝つか」よりも「どんな価値観で進むと強みが活きるか」がはっきりしやすいタイプです。</p>
+    <p>このタイプは、無理に他人の勝ち方を真似るより、自分の価値観が自然に出る環境を選ぶほど成果に結びつきやすくなります。逆に、合わない環境では力が空回りしやすいため、働き方・顧客・集客導線を自分の型に合わせることが重要です。</p>
+  `;
+}
 
-      if (dm.element === ms.element) {
-        return samePolarity ? "比肩" : "劫財";
-      }
+function loseDescription(valueInfo, losePattern){
+  const style = losePattern.dominant === "A系"
+    ? "勢いや感情が先に立ちやすく、雑さ・継続不足・波の大きさとして出やすい傾向"
+    : "考えすぎや慎重さが強まり、止まりやすさ・抱え込み・設計過多として出やすい傾向";
+  return `
+    <p>あなたの負け筋は、<strong>${valueInfo.typeName}</strong>の強みが行きすぎたときに現れやすい偏りです。</p>
+    <p>具体的には、${style}があります。これは欠点というより、強みの裏返しです。だからこそ「何が起きると偏りやすいか」を先に自覚しておくことで、勝ち筋を崩さずに使い続けやすくなります。</p>
+    <p>無理に真逆の人になる必要はありません。勢いが強すぎるなら整える仕組みを足し、慎重さが強すぎるなら小さく動く導線を作る。その調整だけで十分、勝ち方は安定していきます。</p>
+  `;
+}
 
-      if (generateElement(dm.element) === ms.element) {
-        return samePolarity ? "食神" : "傷官";
-      }
+function scoreTableHtml(scoreObj, dataMap){
+  return Object.entries(scoreObj)
+    .sort((a,b)=>Number(a[0])-Number(b[0]))
+    .map(([id,val])=>`<span class="chip">${dataMap[id].short}：${val}</span>`)
+    .join("");
+}
 
-      if (controlElement(dm.element) === ms.element) {
-        return samePolarity ? "偏財" : "正財";
-      }
+function pageTemplate(num, title, body){
+  return `<section class="page">
+    ${body}
+    <div class="page-number">${num} / 9</div>
+  </section>`;
+}
 
-      if (controlElement(ms.element) === dm.element) {
-        return samePolarity ? "偏官" : "正官";
-      }
+function renderResults(){
+  const valueInfo = diagnoseValueType(state.birthDate);
+  const work = scoreWork(state.answers);
+  const marketing = scoreMarketing(state.answers);
+  const losePattern = scoreLosePattern(state.answers);
+  const workRadar = calcWorkRadar(state.answers);
+  const marketingRadar = calcMarketingRadar(state.answers);
 
-      if (generateElement(ms.element) === dm.element) {
-        return samePolarity ? "偏印" : "印綬";
-      }
+  const workType = WORK_TYPES[work.winner];
+  const marketingType = MARKETING_TYPES[marketing.winner];
 
-      return "比肩";
-    }
+  const pages = [];
 
-    function getFormalValueTypeInfo() {
-      const date = buildUtcDateFromInput();
+  pages.push(pageTemplate(1,"勝ち観タイプ",`
+    <div class="cover-kicker">P1 勝ち観タイプ</div>
+    <h1 class="cover-title">あなたの仕事の勝ち観タイプ</h1>
+    <div class="type-hero">${valueInfo.rootType.replace("タイプ","")}（${valueInfo.yinYang}）タイプ</div>
+    <div class="type-line"><strong>あなたは ${valueInfo.rootType.replace("タイプ","")}（${valueInfo.yinYang}）タイプ です。</strong></div>
+    <div class="cover-panel">
+      <div class="cover-sub">${state.name} さん｜生年月日：${state.birthDate}</div>
+    </div>
+    <div class="section lead">${typeDescription(valueInfo)}</div>
+  `));
 
-      const dayStemIndex = getDayStemIndex(date);
-      const dayStem = STEMS[dayStemIndex];
+  pages.push(pageTemplate(2,"働きかたの勝ち筋",`
+    <div class="cover-kicker">P2 働きかたの勝ち筋</div>
+    <h2>${workType.title}</h2>
+    <div class="section lead">
+      <p>${workType.summary}</p>
+      <p>あなたは、<strong>${workType.short}</strong>として力を発揮しやすい傾向があります。勝ち筋は「努力を増やすこと」ではなく、「自分の自然な強みが活きる勝ち方を選ぶこと」にあります。</p>
+      <p>この型では、仕事の設計・提案・見せ方を${workType.title}の方向に寄せるほど、無理なく価値が伝わりやすくなります。</p>
+    </div>
+  `));
 
-      const yearStemIndex = getYearStemIndex(date);
-      const monthOrder = getSolarMonthOrder(date);
-      const monthStemIndex = getMonthStemIndex(yearStemIndex, monthOrder);
-      const monthStem = STEMS[monthStemIndex];
+  pages.push(pageTemplate(3,"働きかたレーダーチャート",`
+    <div class="cover-kicker">P3 働きかたレーダーチャート</div>
+    <h2>働きかた能力レーダー</h2>
+    <div class="grid2">
+      <div><canvas id="workRadarCanvas"></canvas></div>
+      <div>
+        <div class="box"><p>回答傾向から「自然に使いやすい力」を可視化しています。数値の優劣ではなく、どの力を前に出すと勝ちやすいかを見るためのレーダーです。</p></div>
+      </div>
+    </div>
+  `));
 
-      const tenGod = getTenGod(dayStem, monthStem);
-      const polarityKey = YANG_GODS.includes(tenGod) ? "yo" : "in";
-      const baseKey = DAY_STEM_TO_BASE_KEY[dayStem];
-      const fullKey = `${baseKey}_${polarityKey}`;
+  pages.push(pageTemplate(4,"勝ち筋顧客",`
+    <div class="cover-kicker">P4 勝ち筋顧客</div>
+    <h2>${workType.title}のあなたの勝ち筋顧客</h2>
+    <div class="section lead">
+      ${customerText(work.winner)}
+    </div>
+  `));
 
-      return {
-        fullKey,
-        dayStem,
-        monthStem,
-        tenGod,
-        polarityKey
-      };
-    }
+  pages.push(pageTemplate(5,"集客の勝ち筋",`
+    <div class="cover-kicker">P5 集客の勝ち筋</div>
+    <h2>${marketingType.title}</h2>
+    <div class="section lead">
+      <p>${marketingType.summary}</p>
+      <p>あなたの集客は、${marketingType.title}の方向に寄せるほど自然体で成果につながりやすくなります。苦手な方法を無理に増やすより、勝ち筋の導線を太くするほうが伸びやすいタイプです。</p>
+    </div>
+  `));
 
-    function getValueTypeKey() {
-      return getFormalValueTypeInfo().fullKey;
-    }
+  pages.push(pageTemplate(6,"集客レーダーチャート",`
+    <div class="cover-kicker">P6 集客レーダーチャート</div>
+    <h2>集客能力レーダー</h2>
+    <div class="grid2">
+      <div><canvas id="marketingRadarCanvas"></canvas></div>
+      <div>
+        <div class="box"><p>回答傾向から「集客で自然に出やすい強み」を可視化しています。苦手を埋めるより、勝ち筋の導線を太くするための参考として見てください。</p></div>
+      </div>
+    </div>
+  `));
 
-    function getValueTypeData() {
-      const key = getValueTypeKey();
-      return VALUE_TYPE_DATA[key] || VALUE_TYPE_DATA.taiyo_yo;
-    }
+  pages.push(pageTemplate(7,"働きかたの勝ち筋パートナー",`
+    <div class="cover-kicker">P7 働きかたの勝ち筋パートナー</div>
+    <h2>${workType.title}のあなたの勝ち筋パートナー</h2>
+    <div class="section lead">${partnerWorkText(work.winner)}</div>
+  `));
 
-    function start() {
-      const name = document.getElementById("name").value.trim();
-      const by = document.getElementById("by").value.trim();
-      const bm = document.getElementById("bm").value.trim();
-      const bd = document.getElementById("bd").value.trim();
+  pages.push(pageTemplate(8,"集客の勝ち筋パートナー",`
+    <div class="cover-kicker">P8 集客の勝ち筋パートナー</div>
+    <h2>${marketingType.title}のあなたの勝ち筋パートナー</h2>
+    <div class="section lead">${partnerMarketingText(marketing.winner)}</div>
+  `));
 
-      if (!name) {
-        alert("お名前を入力してください");
-        return;
-      }
+  pages.push(pageTemplate(9,"負け筋",`
+    <div class="cover-kicker">P9 負け筋</div>
+    <h2>あなたの負け筋タイプ</h2>
+    <div class="section lead">${loseDescription(valueInfo, losePattern)}</div>
+  `));
 
-      if (!by || !bm || !bd) {
-        alert("生年月日を入力してください");
-        return;
-      }
+  resultsWrap.innerHTML = pages.join("");
+  resultsWrap.classList.add("active");
 
-      document.getElementById("screen-top").classList.add("hidden");
-      document.getElementById("screen-q").classList.remove("hidden");
-      render();
-    }
-
-    function render() {
-      const q = QUESTIONS[cur];
-      const progress = (cur / QUESTIONS.length) * 100;
-      document.getElementById("progress-bar").style.width = progress + "%";
-
-      document.getElementById("q-content").innerHTML = `
-        <div class="q-top">質問 ${cur + 1} / ${QUESTIONS.length}</div>
-        <h2>${q.question}</h2>
-        <button class="btn" onclick="answer('A')">${q.choices[0].label}</button>
-        <button class="btn btn-sub" onclick="answer('B')">${q.choices[1].label}</button>
-      `;
-    }
-
-    function answer(value) {
-      answers.push({
-        questionId: QUESTIONS[cur].id,
-        answer: value
-      });
-
-      cur++;
-
-      if (cur < QUESTIONS.length) {
-        render();
-      } else {
-        finish();
-      }
-    }
-
-    function finish() {
-      document.getElementById("screen-q").classList.add("hidden");
-      document.getElementById("screen-result").classList.remove("hidden");
-      showFullResult();
-    }
-
-    function showFullResult() {
-      const valueType = getValueTypeData();
-
-      const resultHtml = `
-        <div class="result-page">
-          <div class="page-kicker">あなたの仕事の勝ち観は</div>
-          <div class="page-title">${valueType.title}</div>
-          <div class="page-catch">${valueType.catchCopy}</div>
-
-          <div class="result-section">
-            <h3>${valueType.mainTitle}</h3>
-            <div class="result-body">${valueType.mainBody}</div>
-          </div>
-
-          <div class="result-section">
-            <h3>持ちやすい勝ち観</h3>
-            <div class="tag-box">${valueType.naturalValues}</div>
-          </div>
-
-          <div class="result-section">
-            <h3>大切にするべき勝ち観 Top5</h3>
-            <ol class="result-list">
-              ${valueType.keepValues}
-            </ol>
-          </div>
-
-          <div class="result-section">
-            <h3>捨てるべき価値観 Top5</h3>
-            <ol class="result-list">
-              ${valueType.releaseValues}
-            </ol>
-          </div>
-        </div>
-
-        <div class="result-page">
-          <div class="page-kicker">あなたの働きかたの勝ち筋</div>
-          <div class="page-title">新価値を生み出して勝つ</div>
-          <div class="page-catch">まだ誰も気づいていない価値を見つけ、新しい流れを生み出す人</div>
-
-          <div class="result-section">
-            <h3>あなたの働き方</h3>
-            <div class="result-body">この人の勝ち筋は、新しい価値や可能性を生み出すことです。
-
-既存のやり方の中で効率よく仕事を進めることよりも、
-新しい発想、新しい切り口、新しいコンセプトを見つけたときに、能力が一気に発揮されます。
-
-「今あるものを改善する人」というよりも、
-まだ形になっていない価値を見つける人です。
-
-人が見過ごしているチャンスや新しい組み合わせ、
-今までにない可能性を見つけることができます。
-
-“はじまり”をつくる場面で最も力を発揮します。</div>
-          </div>
-        </div>
-
-        <div class="result-page">
-          <div class="page-kicker">あなたの働きかたレーダー</div>
-          <div class="page-title">働きかた能力バランスチャート</div>
-          <div class="page-catch">自然に使いやすい働く力を見える化しました</div>
-
-          <div class="result-section">
-            <h3>レーダーチャートの型</h3>
-            <div class="result-body">能力一点特化型
-1つの能力が大きく突出している形です。
-すべてを平均的に使うより、この強みを中心に仕事を組み立てることで力が発揮されやすくなります。</div>
-          </div>
-        </div>
-
-        <div class="result-page">
-          <div class="page-kicker">あなたの勝ち筋顧客</div>
-          <div class="page-title">新価値を生み出し勝つスタイルの勝ち筋顧客</div>
-          <div class="page-catch">実績顧客と働き方から導く顧客診断</div>
-
-          <div class="result-section">
-            <h3>1位｜新しいことを形にしたいタイプ</h3>
-            <div class="result-body">頭の中にはアイデアがある。
-「こんなことできたら面白い」と思っている。
-でも、どう形にすればいいのか分からない。
-
-そんな段階にいる人ほど、あなたと相性が良いです。</div>
-          </div>
-        </div>
-
-        <div class="result-page">
-          <div class="page-kicker">あなたの集客の勝ち筋</div>
-          <div class="page-title">行動・接点数で勝つ</div>
-          <div class="page-catch">人との接触量・行動量の多さでチャンスを広げる</div>
-
-          <div class="result-section">
-            <h3>あなたの集客の勝ち筋</h3>
-            <div class="result-body">あなたの魅力は、情熱と行動力です。
-
-会いたい人に連絡する、人に会いに行く、興味のある相手に声をかけるなど、
-自分から積極的に接点を作るフットワークの軽さを持っています。</div>
-          </div>
-        </div>
-
-        <div class="result-page">
-          <div class="page-kicker">あなたの集客レーダー</div>
-          <div class="page-title">集客能力バランスレーダー</div>
-          <div class="page-catch">自然に成果につながりやすい集客の力を見える化しました</div>
-
-          <div class="result-section">
-            <h3>レーダーチャートの型</h3>
-            <div class="result-body">高水準バランス型
-上位の強みがまとまって高いバランス型です。</div>
-          </div>
-        </div>
-
-        <div class="result-page">
-          <div class="page-kicker">あなたの勝ち筋パートナー</div>
-          <div class="page-title">働き方 × 集客 パートナー診断</div>
-          <div class="page-catch">ひとりで抱えず、強みを掛け合わせるための相性設計</div>
-
-          <div class="result-section">
-            <h3>相性の良い働き方パートナー</h3>
-            <div class="result-body">このセクションは次の差し替えで正式文言に変わります。</div>
-          </div>
-        </div>
-
-        <div class="result-page">
-          <div class="page-kicker">あなたのビジネス負け筋</div>
-          <div class="page-title">${valueType.title} の負け筋</div>
-          <div class="page-catch">強みの裏側にある“崩れやすいポイント”を先に知っておく</div>
-
-          <div class="result-section">
-            <h3>このページについて</h3>
-            <div class="result-body">負け筋20タイプの正式文言は、次の差し替えで反映します。</div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById("result-content").innerHTML = resultHtml;
-    }
-  </script>
+  requestAnimationFrame(()=>{
+    renderRadar(document.getElementById("workRadarCanvas"), workRadar);
+    renderRadar(document.getElementById("marketingRadarCanvas"), marketingRadar);
+  });
+}
+</script>
 </body>
 </html>
