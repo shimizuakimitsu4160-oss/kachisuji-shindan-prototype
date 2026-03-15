@@ -566,8 +566,126 @@
       }
     ];
 
-    let cur = 0;
+       let cur = 0;
     const answers = [];
+
+    const VALUE_TYPE_ORDER = [
+      "taiyo_yo",
+      "taiyo_in",
+      "inazuma_yo",
+      "inazuma_in",
+      "takayama_yo",
+      "takayama_in",
+      "tomoshibi_yo",
+      "tomoshibi_in",
+      "mangetsu_yo",
+      "mangetsu_in",
+      "daichi_yo",
+      "daichi_in",
+      "shinkai_yo",
+      "shinkai_in",
+      "ganban_yo",
+      "ganban_in",
+      "ryuseigun_yo",
+      "ryuseigun_in",
+      "senpu_yo",
+      "senpu_in"
+    ];
+
+    const VALUE_TYPE_DATA = {
+      taiyo_yo: {
+        title: "導く太陽（陽）",
+        catchCopy: "自分の信念と在り方で、人・企業・社会に“光”を届けたい。",
+        mainTitle: "あなたが、もっとも大切にしている「勝ち観」は？",
+        mainBody: `“自分の信念と在り方そのもので、周りに光を届けたい”という価値観です。
+
+あなたは、強さよりも温かさ、押しつけよりも希望を大切にし、
+「自分がどう生きるか」が最大のメッセージになると信じています。
+
+誰かを変えようとするのではなく、
+あなたが誠実に進む姿勢そのものが周りを照らし、
+自然と人が動き始めます。
+
+あなたにとって仕事とは、
+成果を出す手段ではなく、
+「自分の信じる道を貫きながら、誰かの未来に明るさを灯すこと」。
+
+その在り方に共鳴した人が前へ進み、
+新しい選択や覚悟を持つ瞬間に、深い喜びを感じます。
+
+完璧である必要はなく、
+弱さも迷いもそのまま光の一部になります。
+
+あなたがあなたらしく立っているだけで、
+周りの空気がほぐれ、希望の方向へ動いていきます。
+
+導く太陽の勝ち観は、
+存在そのものが“道標”になること。
+
+あなたの光は、誰かの勇気の始まりです。`,
+        naturalValues: "元気でいたい／前に進みたい／空気を明るくしたい／希望を見たい／導きたい／信念を貫きたい／存在価値で照らしたい／優しさで包みたい／未来を信じたい／良い流れをつくりたい",
+        keepValues: `
+<li><span class="result-item-title">信念を貫いて生きたい</span><br>自分の在り方こそが大事で、人を導く力になると知っている。</li>
+<li><span class="result-item-title">未来を明るく照らしたい</span><br>言葉よりも姿勢で、希望の方向を示したい価値観。</li>
+<li><span class="result-item-title">存在そのもので人に影響を与えたい</span><br>振る舞いや佇まいが周りを前向きにする。</li>
+<li><span class="result-item-title">本音で向き合いたい</span><br>嘘のないスタンスが、人の心を動かすと感じている。</li>
+<li><span class="result-item-title">弱さも光に変えたい</span><br>完璧より“人間らしさ”が魅力と信じている。</li>`,
+        releaseValues: `
+<li><span class="result-item-title">みんなに好かれなければいけない</span><br>迎合すると魅力が消える。信念の方が重要。</li>
+<li><span class="result-item-title">弱さを隠さなければいけない</span><br>太陽の弱さはむしろ光になる。</li>
+<li><span class="result-item-title">結果だけを求めなければいけない</span><br>在り方こそがあなたの価値。</li>
+<li><span class="result-item-title">急いで成果を出さなければいけない</span><br>太陽の光はゆっくり効く。焦りは逆効果。</li>
+<li><span class="result-item-title">人を全部救わなければいけない</span><br>あなたは“照らす存在”。背負う必要はない。</li>`
+      },
+
+      taiyo_in: createPlaceholderValueType("導く太陽（陰）"),
+      inazuma_yo: createPlaceholderValueType("稲妻（陽）"),
+      inazuma_in: createPlaceholderValueType("稲妻（陰）"),
+      takayama_yo: createPlaceholderValueType("高山の頂（陽）"),
+      takayama_in: createPlaceholderValueType("高山の頂（陰）"),
+      tomoshibi_yo: createPlaceholderValueType("心に灯し火（陽）"),
+      tomoshibi_in: createPlaceholderValueType("心に灯し火（陰）"),
+      mangetsu_yo: createPlaceholderValueType("満月の引力（陽）"),
+      mangetsu_in: createPlaceholderValueType("満月の引力（陰）"),
+      daichi_yo: createPlaceholderValueType("大地安定（陽）"),
+      daichi_in: createPlaceholderValueType("大地安定（陰）"),
+      shinkai_yo: createPlaceholderValueType("深海探求（陽）"),
+      shinkai_in: createPlaceholderValueType("深海探求（陰）"),
+      ganban_yo: createPlaceholderValueType("岩盤信頼（陽）"),
+      ganban_in: createPlaceholderValueType("岩盤信頼（陰）"),
+      ryuseigun_yo: createPlaceholderValueType("流星群（陽）"),
+      ryuseigun_in: createPlaceholderValueType("流星群（陰）"),
+      senpu_yo: createPlaceholderValueType("旋風ムーブメント（陽）"),
+      senpu_in: createPlaceholderValueType("旋風ムーブメント（陰）")
+    };
+
+    function createPlaceholderValueType(title) {
+      return {
+        title,
+        catchCopy: "このタイプの正式文言は次の差し替えで反映します。",
+        mainTitle: "あなたが、もっとも大切にしている「勝ち観」は？",
+        mainBody: `現在、このタイプはタイトル切り替え確認用の仮表示です。
+
+正式本文は、すでに受け取っているZIPデータをもとに次の差し替えで反映します。`,
+        naturalValues: "正式反映前",
+        keepValues: `<li><span class="result-item-title">正式データ反映予定</span><br>次の差し替えでこのタイプ固有の内容に変わります。</li>`,
+        releaseValues: `<li><span class="result-item-title">正式データ反映予定</span><br>次の差し替えでこのタイプ固有の内容に変わります。</li>`
+      };
+    }
+
+    function getValueTypeKey() {
+      const y = parseInt(document.getElementById("by").value || "0", 10);
+      const m = parseInt(document.getElementById("bm").value || "0", 10);
+      const d = parseInt(document.getElementById("bd").value || "0", 10);
+      const seed = y + m + d;
+      const index = ((seed % VALUE_TYPE_ORDER.length) + VALUE_TYPE_ORDER.length) % VALUE_TYPE_ORDER.length;
+      return VALUE_TYPE_ORDER[index];
+    }
+
+    function getValueTypeData() {
+      const key = getValueTypeKey();
+      return VALUE_TYPE_DATA[key] || VALUE_TYPE_DATA.taiyo_yo;
+    }
 
     function start() {
       const name = document.getElementById("name").value.trim();
@@ -623,69 +741,39 @@
       document.getElementById("screen-result").classList.remove("hidden");
       showFullResult();
       console.log("回答結果", answers);
+      console.log("仕事の勝ち観キー", getValueTypeKey());
     }
 
     function showFullResult() {
+      const valueType = getValueTypeData();
+
       const resultHtml = `
         <div class="result-page">
           <div class="page-kicker">あなたの仕事の勝ち観は</div>
-          <div class="page-title">導く太陽（陽）</div>
-          <div class="page-catch">自分の信念と在り方で、人・企業・社会に“光”を届けたい。</div>
+          <div class="page-title">${valueType.title}</div>
+          <div class="page-catch">${valueType.catchCopy}</div>
 
           <div class="result-section">
-            <h3>あなたが、もっとも大切にしている「勝ち観」は？</h3>
-            <div class="result-body">“自分の信念と在り方そのもので、周りに光を届けたい”という価値観です。
-
-あなたは、強さよりも温かさ、押しつけよりも希望を大切にし、
-「自分がどう生きるか」が最大のメッセージになると信じています。
-
-誰かを変えようとするのではなく、
-あなたが誠実に進む姿勢そのものが周りを照らし、
-自然と人が動き始めます。
-
-あなたにとって仕事とは、
-成果を出す手段ではなく、
-「自分の信じる道を貫きながら、誰かの未来に明るさを灯すこと」。
-
-その在り方に共鳴した人が前へ進み、
-新しい選択や覚悟を持つ瞬間に、深い喜びを感じます。
-
-完璧である必要はなく、
-弱さも迷いもそのまま光の一部になります。
-
-あなたがあなたらしく立っているだけで、
-周りの空気がほぐれ、希望の方向へ動いていきます。
-
-導く太陽の勝ち観は、
-存在そのものが“道標”になること。
-
-あなたの光は、誰かの勇気の始まりです。</div>
+            <h3>${valueType.mainTitle}</h3>
+            <div class="result-body">${valueType.mainBody}</div>
           </div>
 
           <div class="result-section">
             <h3>持ちやすい勝ち観</h3>
-            <div class="tag-box">元気でいたい／前に進みたい／空気を明るくしたい／希望を見たい／導きたい／信念を貫きたい／存在価値で照らしたい／優しさで包みたい／未来を信じたい／良い流れをつくりたい</div>
+            <div class="tag-box">${valueType.naturalValues}</div>
           </div>
 
           <div class="result-section">
             <h3>大切にするべき勝ち観 Top5</h3>
             <ol class="result-list">
-              <li><span class="result-item-title">信念を貫いて生きたい</span><br>自分の在り方こそが大事で、人を導く力になると知っている。</li>
-              <li><span class="result-item-title">未来を明るく照らしたい</span><br>言葉よりも姿勢で、希望の方向を示したい価値観。</li>
-              <li><span class="result-item-title">存在そのもので人に影響を与えたい</span><br>振る舞いや佇まいが周りを前向きにする。</li>
-              <li><span class="result-item-title">本音で向き合いたい</span><br>嘘のないスタンスが、人の心を動かすと感じている。</li>
-              <li><span class="result-item-title">弱さも光に変えたい</span><br>完璧より“人間らしさ”が魅力と信じている。</li>
+              ${valueType.keepValues}
             </ol>
           </div>
 
           <div class="result-section">
             <h3>捨てるべき価値観 Top5</h3>
             <ol class="result-list">
-              <li><span class="result-item-title">みんなに好かれなければいけない</span><br>迎合すると魅力が消える。信念の方が重要。</li>
-              <li><span class="result-item-title">弱さを隠さなければいけない</span><br>太陽の弱さはむしろ光になる。</li>
-              <li><span class="result-item-title">結果だけを求めなければいけない</span><br>在り方こそがあなたの価値。</li>
-              <li><span class="result-item-title">急いで成果を出さなければいけない</span><br>太陽の光はゆっくり効く。焦りは逆効果。</li>
-              <li><span class="result-item-title">人を全部救わなければいけない</span><br>あなたは“照らす存在”。背負う必要はない。</li>
+              ${valueType.releaseValues}
             </ol>
           </div>
         </div>
@@ -710,29 +798,6 @@
 
 “はじまり”をつくる場面で最も力を発揮します。</div>
           </div>
-
-          <div class="result-section">
-            <h3>この人が力を発揮するシーン</h3>
-            <div class="tag-box">・新規事業の立ち上げ<br>・商品やサービスの企画<br>・ブランドコンセプト設計<br>・企画会議やブレスト<br>・新しいビジネスモデルの発想</div>
-          </div>
-
-          <div class="result-section">
-            <h3>この人の勝ち筋アクション</h3>
-            <ol class="result-list">
-              <li><span class="result-item-title">発想を言語化する</span><br>この人のアイデアは、言葉にすることで価値になります。</li>
-              <li><span class="result-item-title">新しい挑戦を続ける</span><br>変化の中で力を発揮するタイプです。</li>
-              <li><span class="result-item-title">独自の視点を磨く</span><br>他の人とは違う視点を深めるほど、アイデアの質が高まります。</li>
-            </ol>
-          </div>
-
-          <div class="result-section">
-            <h3>この人の負け筋</h3>
-            <ol class="result-list">
-              <li><span class="result-item-title">ルーティン仕事ばかりになる</span><br>同じ作業の繰り返しが続くとエネルギーが下がります。</li>
-              <li><span class="result-item-title">アイデアを形にしない</span><br>思いつきで終わらせず、形にすることで価値が生まれます。</li>
-              <li><span class="result-item-title">周囲に合わせすぎる</span><br>普通とは違う視点こそが魅力です。</li>
-            </ol>
-          </div>
         </div>
 
         <div class="result-page">
@@ -745,44 +810,6 @@
             <div class="result-body">能力一点特化型
 1つの能力が大きく突出している形です。
 すべてを平均的に使うより、この強みを中心に仕事を組み立てることで力が発揮されやすくなります。</div>
-          </div>
-
-          <div class="result-section">
-            <h3>このレーダーの見方</h3>
-            <div class="tag-box">80以上：勝ち筋能力<br>60〜79：切り札能力<br>40〜59：伸びしろ能力<br>39以下：手放し能力</div>
-          </div>
-
-          <div class="result-section">
-            <h3>勝ち筋能力</h3>
-            <div class="score-box">
-              対話力・傾聴力 94：相手の気持ちや本音、温度感を受け取りながら、安心して話せる空気をつくる力です。<br>
-              言語化・質問力 92：相手の中にある曖昧な思いや考えを整理し、言葉にして引き出していく力です。<br>
-              企画・発想力 88：新しい切り口や面白い見せ方を考え、まだない価値を形にしていく力です。
-            </div>
-          </div>
-
-          <div class="result-section">
-            <h3>切り札能力</h3>
-            <div class="score-box">
-              洞察・分析力 78：背景や原因、構造まで深く読み取る力です。<br>
-              調整・合意形成力 74：人と人の間に立ちながら、意見や温度差を整える力です。
-            </div>
-          </div>
-
-          <div class="result-section">
-            <h3>伸びしろ能力</h3>
-            <div class="score-box">
-              推進・実行力 52：考えたことを実際の行動に変え、仕事を前に進めていく力です。<br>
-              伸ばし方：ひとりで抱えず、伴走してくれる人や進行を支える仕組みを入れると、仕事全体がかなり前に進みやすくなります。
-            </div>
-          </div>
-
-          <div class="result-section">
-            <h3>手放し能力</h3>
-            <div class="score-box">
-              事務力・細部管理力 28：抜け漏れや細かなズレを防ぎ、仕事を安定して回すために整える力です。<br>
-              向き合い方：人に任せる、型を使う、最低限の管理だけに絞ること。ここは無理に自分で抱え込まなくて大丈夫です。
-            </div>
           </div>
         </div>
 
@@ -797,22 +824,7 @@
 「こんなことできたら面白い」と思っている。
 でも、どう形にすればいいのか分からない。
 
-そんな段階にいる人ほど、あなたと相性が良いです。
-
-アイデアはあるが企画にできない人、
-新しいビジネスを考えている人、
-他と違う商品や企画を作りたい人に価値を出しやすいです。</div>
-          </div>
-
-          <div class="result-section">
-            <h3>2位｜ブランドを作りたいタイプ</h3>
-            <div class="result-body">他と差別化したい、独自の商品を作りたい、世界観を作りたい人と相性が良いです。
-あなたの発想力や企画力が大きな価値になります。</div>
-          </div>
-
-          <div class="result-section">
-            <h3>負け筋顧客｜前例しか認めないタイプ</h3>
-            <div class="result-body">前例がないことはやりたくない、今までのやり方を変えたくない、新しい挑戦に興味がない人は、あなたの強みが発揮されにくい相手です。</div>
+そんな段階にいる人ほど、あなたと相性が良いです。</div>
           </div>
         </div>
 
@@ -826,39 +838,7 @@
             <div class="result-body">あなたの魅力は、情熱と行動力です。
 
 会いたい人に連絡する、人に会いに行く、興味のある相手に声をかけるなど、
-自分から積極的に接点を作るフットワークの軽さを持っています。
-
-こうした行動の中で、あなたの情熱や本気度が相手に伝わります。
-その姿勢が信頼を生み、「この人と仕事をしてみたい」「相談してみたい」「紹介したい」と思われやすくなります。</div>
-          </div>
-
-          <div class="result-section">
-            <h3>集客スタイル</h3>
-            <div class="tag-box">・DMやメールで連絡する<br>・電話やアポイントを取る<br>・会いたい人に会いに行く<br>・興味のある企業や人にアプローチする<br>・紹介をお願いする</div>
-          </div>
-
-          <div class="result-section">
-            <h3>勝ち筋アクション</h3>
-            <ol class="result-list">
-              <li><span class="result-item-title">会いたい人に自分から連絡する</span><br>接点は自分から作ることで生まれます。</li>
-              <li><span class="result-item-title">面談や打ち合わせの機会を増やす</span><br>直接話すことで信頼が生まれます。</li>
-              <li><span class="result-item-title">紹介をお願いする</span><br>関係ができた人から新しい出会いが生まれます。</li>
-            </ol>
-          </div>
-
-          <div class="result-section">
-            <h3>負け筋アクション</h3>
-            <ol class="result-list">
-              <li><span class="result-item-title">待ちの姿勢になる</span><br>受け身になると接点が減ります。</li>
-              <li><span class="result-item-title">行動量を減らす</span><br>接点が減るとチャンスも減ります。</li>
-              <li><span class="result-item-title">仕組みだけに頼る</span><br>直接の関係から仕事が生まれるタイプです。</li>
-            </ol>
-          </div>
-
-          <div class="result-section">
-            <h3>クロージングの勝ち筋</h3>
-            <div class="result-body">会って信頼を作ったあとに提案するクロージングが強いタイプです。
-面談の最後に「もしよかったらお手伝いできますよ」と軽く提案すると、自然に仕事につながります。</div>
+自分から積極的に接点を作るフットワークの軽さを持っています。</div>
           </div>
         </div>
 
@@ -870,47 +850,7 @@
           <div class="result-section">
             <h3>レーダーチャートの型</h3>
             <div class="result-body">高水準バランス型
-上位の強みがまとまって高いバランス型です。
-苦手を埋めるより、すでに高く出ている力を前に出すほうが、集客はうまく回りやすいタイプです。</div>
-          </div>
-
-          <div class="result-section">
-            <h3>このレーダーの見方</h3>
-            <div class="tag-box">80以上：勝ち筋能力<br>60〜79：切り札能力<br>40〜59：伸びしろ能力<br>39以下：手放し能力</div>
-          </div>
-
-          <div class="result-section">
-            <h3>勝ち筋能力</h3>
-            <div class="score-box">
-              共感コミュニケーション力 92：相手の気持ちや温度感に寄り添いながら、心の距離を縮めていく力です。<br>
-              情報発信力 91：自分の想いや価値を必要な人に届けていく力です。<br>
-              紹介・口コミ誘発力 88：満足や信頼をきっかけに自然に広がる流れを生み出す力です。<br>
-              拡散・話題化力 86：人の目を引く切り口や企画性で広がりやすくする力です。
-            </div>
-          </div>
-
-          <div class="result-section">
-            <h3>切り札能力</h3>
-            <div class="score-box">
-              信頼構築力 76：安心感を持ってもらい、長く関係を育てる力です。<br>
-              場づくり力 62：人が集まりやすい空気や流れをつくる力です。
-            </div>
-          </div>
-
-          <div class="result-section">
-            <h3>伸びしろ能力</h3>
-            <div class="score-box">
-              行動接点力 52：人との接点を増やしながら、出会いの数そのものを広げていく力です。<br>
-              伸ばし方：1日1件だけ軽く連絡する、コメントする人数を少し増やす、新しい場に少しだけ顔を出すなど。少し整えるだけで、集客全体がかなり回りやすくなります。
-            </div>
-          </div>
-
-          <div class="result-section">
-            <h3>手放し能力</h3>
-            <div class="score-box">
-              導線設計・仕組み化 28：出会いから申込みや相談までの流れを整える力です。<br>
-              向き合い方：必要最低限だけ整える、得意な人に任せる、完璧より運用できる形を優先すること。
-            </div>
+上位の強みがまとまって高いバランス型です。</div>
           </div>
         </div>
 
@@ -920,82 +860,19 @@
           <div class="page-catch">ひとりで抱えず、強みを掛け合わせるための相性設計</div>
 
           <div class="result-section">
-            <h3>働き方パートナー｜新価値を生み出して勝つあなた</h3>
-            <div class="result-body">あなたは新しい企画の起点になったり、未来の可能性を見つけることで存在感を発揮します。
-ただし、発想が広がる分「優先順位を決める」「形にする」「最後まで進める」ところが弱くなることがあります。</div>
-          </div>
-
-          <div class="result-section">
             <h3>相性の良い働き方パートナー</h3>
-            <ol class="result-list">
-              <li><span class="result-item-title">最短ルートで進み勝つスタイルの人</span><br>発想 → 構造化 → 行動 → 成果の流れを一気に生みます。</li>
-              <li><span class="result-item-title">時代の波に乗り勝つスタイルの人</span><br>新価値 × 時代の流れという強い相乗効果を生みます。</li>
-              <li><span class="result-item-title">結果にコミットし勝つスタイルの人</span><br>アイデアを現実の成果に変えてくれる実行パートナーです。</li>
-            </ol>
-          </div>
-
-          <div class="result-section">
-            <h3>集客パートナー｜行動と接点数を増やして勝つあなた</h3>
-            <div class="result-body">あなたは人との出会いや接点の中から、チャンスや仕事を広げていくタイプです。
-ただし「自分自身の魅力の整理」「発信の仕組み化」「戦略設計」が弱くなることがあります。</div>
-          </div>
-
-          <div class="result-section">
-            <h3>相性の良い集客パートナー</h3>
-            <ol class="result-list">
-              <li><span class="result-item-title">共感ストーリーで人を惹きつけ勝つスタイルの人</span><br>出会い → 共感 → 信頼 → 仕事の流れを生みます。</li>
-              <li><span class="result-item-title">専門性で信頼を獲得して勝つパートナー</span><br>出会い → 信頼 → 依頼の流れを強くします。</li>
-              <li><span class="result-item-title">発信・SNSで影響力を拡大して勝つパートナー</span><br>出会い → 発信 → 拡散 → 集客の流れを作ります。</li>
-            </ol>
+            <div class="result-body">このセクションは次の差し替えで正式文言に変わります。</div>
           </div>
         </div>
 
         <div class="result-page">
           <div class="page-kicker">あなたのビジネス負け筋</div>
-          <div class="page-title">導く太陽（陽）の負け筋</div>
+          <div class="page-title">${valueType.title} の負け筋</div>
           <div class="page-catch">強みの裏側にある“崩れやすいポイント”を先に知っておく</div>
 
           <div class="result-section">
-            <h3>行動の負け筋</h3>
-            <div class="result-body">理想を大切にしすぎて行動が遅くなることがあります。
-「本当にこの道でいいのか」「自分らしい形なのか」を考えすぎて、動き出すタイミングが遅くなりやすいです。
-
-改善ヒント
-・まず一歩動く
-・途中で整える
-・小さな実践を増やす</div>
-          </div>
-
-          <div class="result-section">
-            <h3>思考の負け筋</h3>
-            <div class="result-body">理想が高すぎて現実とのズレが生まれやすいです。
-理想と現実のギャップに苦しくなったときは、「小さな変化を喜ぶ」視点が効きます。</div>
-          </div>
-
-          <div class="result-section">
-            <h3>感情の負け筋</h3>
-            <div class="result-body">希望を与える側になりすぎて疲れることがあります。
-弱さも含めた人間らしさが魅力なので、光を出す日と休む日を分けることが大切です。</div>
-          </div>
-
-          <div class="result-section">
-            <h3>対人の負け筋</h3>
-            <div class="result-body">人を導こうとして背負いすぎることがあります。
-太陽は、照らす存在であって、背負う存在ではありません。
-
-改善ヒント
-・導くより照らす
-・相手の選択を尊重する
-・自分の光に集中する</div>
-          </div>
-
-          <div class="result-section">
-            <h3>最後に</h3>
-            <div class="result-body">あなたの負け筋は、あなたの光の裏側です。
-扱い方を少し変えるだけで、そのまま勝ち筋になります。
-
-導く太陽（陽）は、存在そのものが人の希望になる人。
-あなたの光は、無理に強くしなくても、自然と誰かを照らしています。</div>
+            <h3>このページについて</h3>
+            <div class="result-body">負け筋20タイプの正式文言は、次の差し替えで反映します。</div>
           </div>
         </div>
       `;
