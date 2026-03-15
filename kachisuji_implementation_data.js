@@ -7120,24 +7120,4 @@ window.kachisujiData = {
     }
   }
 };
-window.renderResult = function(result){
-  const screenTop = document.getElementById("screen-top");
-  const resultScreen = document.getElementById("screen-result");
 
-  if(!resultScreen){
-    const div = document.createElement("div");
-    div.id = "screen-result";
-    div.innerHTML = `
-      <div class="card">
-        <h2>診断結果</h2>
-        <p id="resultText"></p>
-        <button class="btn-primary" onclick="location.reload()">最初から</button>
-      </div>
-    `;
-    document.querySelector(".wrap").appendChild(div);
-  }
-
-  document.getElementById("screen-top").style.display = "none";
-  document.getElementById("screen-result").style.display = "block";
-  document.getElementById("resultText").innerText = "診断結果がここに表示されます";
-}
